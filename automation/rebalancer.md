@@ -14,15 +14,7 @@ The Rebalancer detects this condition and executes the following:
 2. **Calculates** a new tick range centered around the current price.
 3. **Deploys** liquidity into the new range.
 
-```
-Price drifts outside range
-         │
-         ▼
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│ Withdraw from    │────▶│ Calculate new     │────▶│ Deploy to new    │
-│ old position     │     │ tick range        │     │ position         │
-└──────────────────┘     └──────────────────┘     └──────────────────┘
-```
+![Rebalance Process Flow](../images/rebalance-flow.png)
 
 ---
 
@@ -33,16 +25,7 @@ The Rebalancer does **not** rebalance on a fixed schedule. Instead, it **checks*
 1. **Position is out of range** -- the current pool tick is outside the vault's `[tickLower, tickUpper]` bounds.
 2. **Cooldown has elapsed** -- at least 60 minutes have passed since the last rebalance.
 
-```
-Every 5 minutes:
-  ├── Is position out of range?
-  │     ├── No  → Do nothing
-  │     └── Yes → Has cooldown elapsed?
-  │                 ├── No  → Do nothing (wait for cooldown)
-  │                 └── Yes → TWAP safety check passes?
-  │                             ├── No  → Skip (possible manipulation)
-  │                             └── Yes → Execute rebalance
-```
+![Rebalance Trigger Decision Tree](../images/rebalance-trigger.png)
 
 ---
 
@@ -147,11 +130,7 @@ Before executing a rebalance, the bot performs a **Time-Weighted Average Price (
 2. It compares the current spot price to the 30-minute TWAP.
 3. If the deviation exceeds **2%**, the rebalance is skipped and a warning is sent to Discord.
 
-```
-|spotPrice - twapPrice| / twapPrice > 2%?
-  ├── Yes → Skip rebalance, alert Discord (possible manipulation)
-  └── No  → Proceed with rebalance
-```
+![TWAP Safety Check](../images/twap-check.png)
 
 ### Configuration
 

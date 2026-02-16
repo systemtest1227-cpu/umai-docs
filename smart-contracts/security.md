@@ -8,27 +8,7 @@ This page details the security mechanisms built into the UmAI vault smart contra
 
 The UmAI vault handles user funds in a non-custodial manner through Uniswap V3 LP positions. Security is enforced at multiple layers:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Access Control Layer                       │
-│  Owner / Manager / User role separation                      │
-├─────────────────────────────────────────────────────────────┤
-│                  Reentrancy Protection Layer                  │
-│  ReentrancyGuard on all state-changing functions             │
-├─────────────────────────────────────────────────────────────┤
-│                   Price Validation Layer                      │
-│  TWAP oracle check (30-min window, 2% max deviation)         │
-├─────────────────────────────────────────────────────────────┤
-│                   Slippage Protection Layer                   │
-│  User-specified slippage, max 1% cap, deadline checks        │
-├─────────────────────────────────────────────────────────────┤
-│                   Token Safety Layer                          │
-│  SafeERC20, non-transferable shares, emergency recovery      │
-├─────────────────────────────────────────────────────────────┤
-│                   Upgrade Safety Layer                        │
-│  UUPS onlyOwner authorization, initializer guard             │
-└─────────────────────────────────────────────────────────────┘
-```
+![Security Model Layers](../images/security-layers.png)
 
 ---
 

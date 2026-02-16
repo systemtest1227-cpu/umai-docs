@@ -114,16 +114,7 @@ The current production contract, deployed behind a UUPS proxy:
 
 UmAI uses the UUPS (EIP-1822) proxy pattern for upgradeability. This is the recommended pattern from OpenZeppelin for production contracts.
 
-```
-┌─────────────────────┐       ┌──────────────────────────────┐
-│     ERC1967 Proxy    │       │   Implementation Contract     │
-│                     │       │   (MellowLiteVaultV3          │
-│  - Stores all state │──────►│    Upgradeable)               │
-│  - Fixed address    │       │                                │
-│  - delegatecall     │       │  - Contains all logic          │
-│                     │       │  - _authorizeUpgrade(onlyOwner)│
-└─────────────────────┘       └──────────────────────────────┘
-```
+![UUPS Proxy Pattern](../images/uups-proxy.png)
 
 **Key properties:**
 

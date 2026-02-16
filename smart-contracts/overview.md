@@ -195,28 +195,7 @@ interface IUniswapV3Pool {
 
 The vault uses a three-tier access control model:
 
-```
-┌──────────────────────────────────────────────────┐
-│                     Owner                         │
-│  - Set manager address                           │
-│  - Set fee recipient                             │
-│  - Set fee rates and referral codes              │
-│  - Emergency token recovery                      │
-│  - Authorize contract upgrades (UUPS)            │
-│  - All Manager permissions                       │
-├──────────────────────────────────────────────────┤
-│                    Manager                        │
-│  - Trigger harvest (collect and distribute fees) │
-│  - Trigger rebalance (reposition liquidity)      │
-│  - Set new tick ranges                           │
-├──────────────────────────────────────────────────┤
-│                      User                         │
-│  - Deposit USDC (with lock period selection)     │
-│  - Withdraw USDC (after lock expiry)             │
-│  - View position value and pending rewards       │
-│  - Claim pending rewards                         │
-└──────────────────────────────────────────────────┘
-```
+![Access Control Hierarchy](../images/access-control.png)
 
 ### Role Definitions
 

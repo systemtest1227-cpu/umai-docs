@@ -10,18 +10,7 @@ When the UmAI Vault provides concentrated liquidity on Uniswap V3, it earns trad
 
 ### The Harvest Cycle
 
-```
-┌─────────────┐    ┌──────────────────────┐    ┌─────────────────┐
-│ Check Gas   │───▶│ harvestAndAllocate() │───▶│ Distribute Fees │
-│ Balance     │    │ (on-chain call)      │    │                 │
-└─────────────┘    └──────────────────────┘    └─────────────────┘
-       │                    │                          │
-       ▼                    ▼                          ▼
-  Skip if low         Collect fees              Performance fee
-  + Alert Discord      from position            → feeRecipient
-                                                Remainder
-                                                → reinvested
-```
+![Harvest Cycle](../images/harvest-cycle.png)
 
 ---
 
@@ -55,11 +44,7 @@ You can adjust the harvest frequency using standard cron syntax:
 
 Before initiating the harvest, the bot checks the operator wallet's ETH balance on Base.
 
-```
-Operator ETH Balance ≥ 0.01 ETH?
-  ├── Yes → Proceed to Step 2
-  └── No  → Skip harvest, send Discord alert
-```
+![Pre-flight Gas Check](../images/gas-check.png)
 
 If the balance is below the `GAS_THRESHOLD` (default: 0.01 ETH), the harvest is skipped entirely and a warning notification is sent to Discord.
 
@@ -81,13 +66,7 @@ function harvestAndAllocate() external onlyManager;
 
 The fee split happens on-chain within the `harvestAndAllocate()` function:
 
-```
-Total Fees Collected
-    │
-    ├── Performance Fee (%) ──▶ feeRecipient address
-    │
-    └── Remainder (%) ──▶ Reinvested into LP position
-```
+![Fee Distribution Split](../images/fee-distribution.png)
 
 ### Step 4: Send Alert
 

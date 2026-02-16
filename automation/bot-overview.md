@@ -8,31 +8,7 @@ The UmAI automation bot is a Node.js service that performs ongoing vault mainten
 
 The bot runs as an **Express.js HTTP server** on **port 3001**. It exposes health-check and management API endpoints while running background cron jobs for each automated task.
 
-```
-┌──────────────────────────────────────────────┐
-│              UmAI Automation Bot              │
-│             Express.js :3001                  │
-├──────────────────────────────────────────────┤
-│                                              │
-│  ┌────────────┐  ┌─────────────┐             │
-│  │ Harvester  │  │ Rebalancer  │             │
-│  └────────────┘  └─────────────┘             │
-│  ┌──────────────┐ ┌──────────────────┐       │
-│  │ Distributor  │ │ ReferralManager  │       │
-│  └──────────────┘ └──────────────────┘       │
-│  ┌────────────┐                              │
-│  │  Alerter   │                              │
-│  └────────────┘                              │
-│                                              │
-│  Cron Scheduler  ─────────────────────────── │
-│  Circuit Breaker ─────────────────────────── │
-│  Gas Monitor     ─────────────────────────── │
-│                                              │
-└──────────────────────────────────────────────┘
-        │               │              │
-        ▼               ▼              ▼
-   Base Mainnet    Discord Webhook   API Clients
-```
+![Bot Architecture](../images/bot-architecture.png)
 
 ### Tech Stack
 
@@ -104,11 +80,7 @@ To prevent runaway failures from draining gas or spamming the network, the bot i
 5. The circuit resets automatically after a configurable cooldown period, or an operator can manually reset it via the API.
 6. Any successful execution immediately resets the failure counter to 0.
 
-```
-Normal ──[failure]──▶ Count=1 ──[failure]──▶ Count=2 ... ──[5th failure]──▶ PAUSED
-  ▲                                                                          │
-  └──────────────────────[cooldown elapsed / manual reset]───────────────────┘
-```
+![Circuit Breaker State Machine](../images/circuit-breaker.png)
 
 ### Configuration
 
@@ -131,9 +103,7 @@ Before a failure is counted against the circuit breaker, each operation is retri
 
 After 3 retries (4 total attempts), the operation is marked as failed and the circuit breaker counter increments.
 
-```
-Attempt 1 ──[fail]──▶ wait 2s ──▶ Attempt 2 ──[fail]──▶ wait 4s ──▶ Attempt 3 ──[fail]──▶ wait 8s ──▶ Attempt 4 ──[fail]──▶ FAILURE
-```
+![Retry Logic with Exponential Backoff](../images/retry-logic.png)
 
 The maximum retry count and base delay are configurable:
 
@@ -152,10 +122,7 @@ Before executing any on-chain transaction, the bot checks the operator wallet's 
 |-----------|---------|-------------|
 | `GAS_THRESHOLD` | `0.01` | Minimum ETH balance required (in ETH) |
 
-```
-Check Balance ──▶ Balance ≥ 0.01 ETH? ──[yes]──▶ Execute Transaction
-                                        ──[no]──▶ Skip + Alert Discord
-```
+![Gas Balance Monitoring](../images/gas-monitoring.png)
 
 The gas monitor runs before every harvest, rebalance, and distribution operation. This prevents transactions from failing mid-execution due to insufficient gas, which would waste the gas spent on the failed transaction.
 
