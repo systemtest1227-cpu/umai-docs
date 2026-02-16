@@ -26,12 +26,7 @@
 * [Harvester](automation/harvester.md)
 * [Rebalancer](automation/rebalancer.md)
 
-## Developers
+## SOCIAL
 
-* [Contract Addresses](developers/contract-addresses.md)
-* [API Reference](developers/api-reference.md)
-* [Deployment](developers/deployment.md)
-
-## Resources
-
-* [FAQ](resources/faq.md)
+* [X](https://x.com)
+* [Telegram](https://web.telegram.org/)

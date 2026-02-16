@@ -104,4 +104,4 @@ If you deposit without applying any referral code:
 * [Getting Started](getting-started.md)
 * [How to Deposit and Withdraw](deposit-withdraw.md)
 * [Understanding Lock Periods](lock-periods.md)
-* [FAQ](../resources/faq.md)
+* [FAQ](/broken/pages/u7SrAPzWu28f5rCUYHBa)

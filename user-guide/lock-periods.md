@@ -150,4 +150,4 @@ You can withdraw each deposit individually once it unlocks, without affecting an
 * [Getting Started](getting-started.md)
 * [How to Deposit and Withdraw](deposit-withdraw.md)
 * [Referral Program](referral-program.md)
-* [FAQ](../resources/faq.md)
+* [FAQ](/broken/pages/u7SrAPzWu28f5rCUYHBa)

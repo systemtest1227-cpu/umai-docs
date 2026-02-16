@@ -109,4 +109,4 @@ When depositing or withdrawing, a small amount of slippage may occur during the 
 * [Getting Started](getting-started.md)
 * [Understanding Lock Periods](lock-periods.md)
 * [Referral Program](referral-program.md)
-* [FAQ](../resources/faq.md)
+* [FAQ](/broken/pages/u7SrAPzWu28f5rCUYHBa)

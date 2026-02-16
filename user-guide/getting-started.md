@@ -141,4 +141,4 @@ Now that you understand the basics, you are ready to make your first deposit.
 * [How to Deposit and Withdraw](deposit-withdraw.md)
 * [Understanding Lock Periods](lock-periods.md)
 * [Referral Program](referral-program.md)
-* [Frequently Asked Questions](../resources/faq.md)
+* [Frequently Asked Questions](/broken/pages/u7SrAPzWu28f5rCUYHBa)
