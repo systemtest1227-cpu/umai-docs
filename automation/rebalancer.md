@@ -2,7 +2,7 @@
 
 The Rebalancer module monitors the WETH/USDC pool price and automatically repositions the vault's concentrated liquidity when the current price drifts outside the active tick range. This ensures the vault continues earning trading fees even as the market moves.
 
----
+***
 
 ## What Rebalancing Does
 
@@ -14,9 +14,9 @@ The Rebalancer detects this condition and executes the following:
 2. **Calculates** a new tick range centered around the current price.
 3. **Deploys** liquidity into the new range.
 
-![Rebalance Process Flow](../images/rebalance-flow.png)
+![Rebalance Process Flow](../.gitbook/assets/rebalance-flow.png)
 
----
+***
 
 ## When It Triggers
 
@@ -25,9 +25,9 @@ The Rebalancer does **not** rebalance on a fixed schedule. Instead, it **checks*
 1. **Position is out of range** -- the current pool tick is outside the vault's `[tickLower, tickUpper]` bounds.
 2. **Cooldown has elapsed** -- at least 60 minutes have passed since the last rebalance.
 
-![Rebalance Trigger Decision Tree](../images/rebalance-trigger.png)
+![Rebalance Trigger Decision Tree](../.gitbook/assets/rebalance-trigger.png)
 
----
+***
 
 ## Check Interval
 
@@ -46,34 +46,34 @@ REBALANCE_CRON="*/15 * * * *"
 
 > **Note:** The check itself is a read-only RPC call (no gas cost). Only the actual rebalance transaction consumes gas.
 
----
+***
 
 ## Cooldown Period
 
 To prevent excessive rebalancing during volatile markets (which would incur gas costs and potential slippage), a **60-minute cooldown** is enforced between rebalance operations.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `REBALANCE_COOLDOWN` | `60` | Minimum minutes between rebalances |
+| Parameter            | Default | Description                        |
+| -------------------- | ------- | ---------------------------------- |
+| `REBALANCE_COOLDOWN` | `60`    | Minimum minutes between rebalances |
 
 ### Why a Cooldown?
 
 During high volatility, the price may rapidly oscillate around the range boundaries. Without a cooldown, the bot could rebalance every 5 minutes, each time paying gas and potentially suffering slippage. The cooldown ensures the bot waits for the market to settle before repositioning.
 
----
+***
 
 ## Range Width
 
 When the Rebalancer creates a new position, it centers the tick range around the current pool tick with a configurable width.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `RANGE_WIDTH` | `4000` | Total width in ticks |
+| Parameter     | Default | Description          |
+| ------------- | ------- | -------------------- |
+| `RANGE_WIDTH` | `4000`  | Total width in ticks |
 
 The default width of **4000 ticks** corresponds to approximately **plus or minus 5%** from the current price. This provides a balance between:
 
-- **Narrow ranges** -- higher fee concentration but more frequent rebalancing needed
-- **Wide ranges** -- less frequent rebalancing but lower capital efficiency
+* **Narrow ranges** -- higher fee concentration but more frequent rebalancing needed
+* **Wide ranges** -- less frequent rebalancing but lower capital efficiency
 
 ### Tick Range Calculation
 
@@ -92,22 +92,22 @@ tickUpper = ceil(tickUpper / 60) * 60
 
 If the current WETH/USDC tick is `-202360` with a range width of 4000:
 
-| Parameter | Value |
-|-----------|-------|
-| Current Tick | -202360 |
-| Raw Lower | -204360 |
-| Raw Upper | -200360 |
+| Parameter            | Value   |
+| -------------------- | ------- |
+| Current Tick         | -202360 |
+| Raw Lower            | -204360 |
+| Raw Upper            | -200360 |
 | Adjusted Lower (÷60) | -204360 |
 | Adjusted Upper (÷60) | -200360 |
 
----
+***
 
 ## Auto-Rebalance Toggle
 
 By default, automatic rebalancing is **disabled**. This is a safety measure to prevent unintended rebalances during initial setup or unusual market conditions.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
+| Parameter        | Default | Description                  |
+| ---------------- | ------- | ---------------------------- |
 | `AUTO_REBALANCE` | `false` | Enable automatic rebalancing |
 
 To enable auto-rebalance:
@@ -118,7 +118,7 @@ AUTO_REBALANCE=true
 
 When `AUTO_REBALANCE` is `false`, the Rebalancer still checks the position status on schedule and sends Discord alerts when the position goes out of range, but it does **not** execute the rebalance transaction. An operator must trigger it manually.
 
----
+***
 
 ## TWAP Safety Check
 
@@ -130,28 +130,28 @@ Before executing a rebalance, the bot performs a **Time-Weighted Average Price (
 2. It compares the current spot price to the 30-minute TWAP.
 3. If the deviation exceeds **2%**, the rebalance is skipped and a warning is sent to Discord.
 
-![TWAP Safety Check](../images/twap-check.png)
+![TWAP Safety Check](../.gitbook/assets/twap-check.png)
 
 ### Configuration
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `TWAP_WINDOW` | `1800` | TWAP observation window in seconds (30 min) |
-| `TWAP_MAX_DEVIATION` | `200` | Maximum allowed deviation in basis points (2%) |
+| Parameter            | Default | Description                                    |
+| -------------------- | ------- | ---------------------------------------------- |
+| `TWAP_WINDOW`        | `1800`  | TWAP observation window in seconds (30 min)    |
+| `TWAP_MAX_DEVIATION` | `200`   | Maximum allowed deviation in basis points (2%) |
 
 ### Why This Matters
 
 An attacker could temporarily move the pool price (via a flash loan or large swap) to trigger a rebalance at an unfavorable price. The TWAP check ensures the bot only rebalances when the current price reflects genuine market conditions sustained over the observation window.
 
----
+***
 
 ## Manual Rebalance from Manager Dashboard
 
 Operators with the Manager role can trigger a rebalance manually through the UmAI frontend dashboard. This is useful when:
 
-- Auto-rebalance is disabled but the position needs repositioning.
-- The operator wants to set a custom tick range instead of the default centered range.
-- Market conditions require immediate action outside the cooldown window.
+* Auto-rebalance is disabled but the position needs repositioning.
+* The operator wants to set a custom tick range instead of the default centered range.
+* Market conditions require immediate action outside the cooldown window.
 
 ### Via the Dashboard
 
@@ -179,22 +179,22 @@ function rebalance(
 ) external onlyManager;
 ```
 
----
+***
 
 ## Configuration Variables
 
 Complete list of Rebalancer configuration:
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `REBALANCE_CRON` | No | `*/5 * * * *` | How often to check position status |
-| `REBALANCE_COOLDOWN` | No | `60` | Minimum minutes between rebalances |
-| `RANGE_WIDTH` | No | `4000` | Tick range width for new positions |
-| `AUTO_REBALANCE` | No | `false` | Enable automatic rebalance execution |
-| `TWAP_WINDOW` | No | `1800` | TWAP observation window (seconds) |
-| `TWAP_MAX_DEVIATION` | No | `200` | Max TWAP deviation (basis points) |
-| `GAS_THRESHOLD` | No | `0.01` | Min ETH balance to execute (in ETH) |
-| `DISCORD_WEBHOOK_URL` | No | -- | Webhook URL for notifications |
+| Variable              | Required | Default       | Description                          |
+| --------------------- | -------- | ------------- | ------------------------------------ |
+| `REBALANCE_CRON`      | No       | `*/5 * * * *` | How often to check position status   |
+| `REBALANCE_COOLDOWN`  | No       | `60`          | Minimum minutes between rebalances   |
+| `RANGE_WIDTH`         | No       | `4000`        | Tick range width for new positions   |
+| `AUTO_REBALANCE`      | No       | `false`       | Enable automatic rebalance execution |
+| `TWAP_WINDOW`         | No       | `1800`        | TWAP observation window (seconds)    |
+| `TWAP_MAX_DEVIATION`  | No       | `200`         | Max TWAP deviation (basis points)    |
+| `GAS_THRESHOLD`       | No       | `0.01`        | Min ETH balance to execute (in ETH)  |
+| `DISCORD_WEBHOOK_URL` | No       | --            | Webhook URL for notifications        |
 
 ### Example `.env` Configuration
 
@@ -218,7 +218,7 @@ TWAP_MAX_DEVIATION=100
 TWAP_WINDOW=3600
 ```
 
----
+***
 
 ## Discord Notifications
 

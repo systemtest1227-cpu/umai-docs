@@ -1,47 +1,47 @@
-# Smart Contracts Overview
+# Overview
 
 This page provides a high-level view of the UmAI smart contract system, including the version history, production deployment details, core interfaces, and access control model.
 
----
+***
 
 ## Contract Versions
 
 UmAI's vault contract has evolved through four versions. Each version added significant features while maintaining backward compatibility with existing depositor state.
 
-| Feature | V1 | V2 | V3 | V3 Upgradeable |
-|---|:---:|:---:|:---:|:---:|
-| USDC deposits | Yes | Yes | Yes | Yes |
-| ERC20 share tokens | Yes | Yes | Yes | Yes |
-| Optimal swap calculation | Yes | Yes | Yes | Yes |
-| Manager-triggered harvest | Yes | Yes | Yes | Yes |
-| Manager-triggered rebalance | Yes | Yes | Yes | Yes |
-| Fee distribution to feeRecipient | Yes | Yes | Yes | Yes |
-| Lock periods (3/6/12 months) | -- | Yes | Yes | Yes |
-| Non-transferable shares | -- | Yes | Yes | Yes |
-| Weighted fee calculation | -- | Yes | Yes | Yes |
-| Deadline-based slippage | -- | Yes | Yes | Yes |
-| Referral system | -- | -- | Yes | Yes |
-| Auto-rebalance (`needsRebalance`) | -- | -- | Yes | Yes |
-| TWAP oracle validation | -- | -- | Yes | Yes |
-| Rebalance cooldown | -- | -- | Yes | Yes |
-| Push-based fee distribution | -- | -- | Yes | Yes |
-| Pending rewards fallback | -- | -- | Yes | Yes |
-| UUPS proxy upgradeability | -- | -- | -- | Yes |
-| `initialize()` function | -- | -- | -- | Yes |
+| Feature                           |  V1 |  V2 |  V3 | V3 Upgradeable |
+| --------------------------------- | :-: | :-: | :-: | :------------: |
+| USDC deposits                     | Yes | Yes | Yes |       Yes      |
+| ERC20 share tokens                | Yes | Yes | Yes |       Yes      |
+| Optimal swap calculation          | Yes | Yes | Yes |       Yes      |
+| Manager-triggered harvest         | Yes | Yes | Yes |       Yes      |
+| Manager-triggered rebalance       | Yes | Yes | Yes |       Yes      |
+| Fee distribution to feeRecipient  | Yes | Yes | Yes |       Yes      |
+| Lock periods (3/6/12 months)      |  -- | Yes | Yes |       Yes      |
+| Non-transferable shares           |  -- | Yes | Yes |       Yes      |
+| Weighted fee calculation          |  -- | Yes | Yes |       Yes      |
+| Deadline-based slippage           |  -- | Yes | Yes |       Yes      |
+| Referral system                   |  -- |  -- | Yes |       Yes      |
+| Auto-rebalance (`needsRebalance`) |  -- |  -- | Yes |       Yes      |
+| TWAP oracle validation            |  -- |  -- | Yes |       Yes      |
+| Rebalance cooldown                |  -- |  -- | Yes |       Yes      |
+| Push-based fee distribution       |  -- |  -- | Yes |       Yes      |
+| Pending rewards fallback          |  -- |  -- | Yes |       Yes      |
+| UUPS proxy upgradeability         |  -- |  -- |  -- |       Yes      |
+| `initialize()` function           |  -- |  -- |  -- |       Yes      |
 
----
+***
 
 ## Production Contract
 
 The current production deployment uses **MellowLiteVaultV3Upgradeable** behind a UUPS (ERC1967) proxy.
 
-| Property | Value |
-|---|---|
-| **Contract Name** | MellowLiteVaultV3Upgradeable |
-| **Network** | Base Mainnet |
-| **Proxy Address** | `0x331a49587A42b92fd0bC2B31cdB07BD0cfC7C8f5` |
-| **Proxy Standard** | ERC1967 (UUPS) |
-| **Solidity Version** | ^0.8.20 |
+| Property              | Value                                                                             |
+| --------------------- | --------------------------------------------------------------------------------- |
+| **Contract Name**     | MellowLiteVaultV3Upgradeable                                                      |
+| **Network**           | Base Mainnet                                                                      |
+| **Proxy Address**     | `0x331a49587A42b92fd0bC2B31cdB07BD0cfC7C8f5`                                      |
+| **Proxy Standard**    | ERC1967 (UUPS)                                                                    |
+| **Solidity Version**  | ^0.8.20                                                                           |
 | **OpenZeppelin Base** | ERC20Upgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable |
 
 > **Note:** The internal contract names (`MellowLiteVault`, `UniLink`) are legacy development names. The public-facing brand is **UmAI**. All user documentation and interfaces should use "UmAI Vault" or "UmAI" exclusively.
@@ -62,13 +62,13 @@ contract MellowLiteVaultV3Upgradeable is
 
 The contract inherits from five OpenZeppelin upgradeable base contracts:
 
-- **Initializable** -- Provides the `initializer` modifier for proxy-safe construction
-- **ERC20Upgradeable** -- Share token functionality (mint, burn, balance tracking)
-- **OwnableUpgradeable** -- Single-owner access control
-- **ReentrancyGuardUpgradeable** -- Reentrancy protection via `nonReentrant` modifier
-- **UUPSUpgradeable** -- Upgrade authorization logic
+* **Initializable** -- Provides the `initializer` modifier for proxy-safe construction
+* **ERC20Upgradeable** -- Share token functionality (mint, burn, balance tracking)
+* **OwnableUpgradeable** -- Single-owner access control
+* **ReentrancyGuardUpgradeable** -- Reentrancy protection via `nonReentrant` modifier
+* **UUPSUpgradeable** -- Upgrade authorization logic
 
----
+***
 
 ## Core Interfaces
 
@@ -122,10 +122,11 @@ interface INonfungiblePositionManager {
 ```
 
 **Vault usage:**
-- `mint()` -- Called during initial deposit or rebalance to create a new LP position
-- `increaseLiquidity()` -- Called on subsequent deposits to add to the existing position
-- `decreaseLiquidity()` -- Called during withdrawals and rebalances to remove liquidity
-- `collect()` -- Called during harvests and rebalances to collect earned trading fees
+
+* `mint()` -- Called during initial deposit or rebalance to create a new LP position
+* `increaseLiquidity()` -- Called on subsequent deposits to add to the existing position
+* `decreaseLiquidity()` -- Called during withdrawals and rebalances to remove liquidity
+* `collect()` -- Called during harvests and rebalances to collect earned trading fees
 
 ### ISwapRouter
 
@@ -152,9 +153,10 @@ interface ISwapRouter {
 ```
 
 **Vault usage:**
-- Deposit: swap USDC to WETH at the calculated optimal ratio
-- Withdrawal: swap WETH back to USDC so the user receives a single token
-- Rebalance: swap tokens to match the new range's optimal ratio
+
+* Deposit: swap USDC to WETH at the calculated optimal ratio
+* Withdrawal: swap WETH back to USDC so the user receives a single token
+* Rebalance: swap tokens to match the new range's optimal ratio
 
 ### IUniswapV3Pool
 
@@ -186,44 +188,48 @@ interface IUniswapV3Pool {
 ```
 
 **Vault usage:**
-- `slot0()` -- Read current price (`sqrtPriceX96`) and tick for swap calculations
-- `observe()` -- Compute TWAP over 30-minute window for manipulation protection
 
----
+* `slot0()` -- Read current price (`sqrtPriceX96`) and tick for swap calculations
+* `observe()` -- Compute TWAP over 30-minute window for manipulation protection
+
+***
 
 ## Access Control
 
 The vault uses a three-tier access control model:
 
-![Access Control Hierarchy](../images/access-control.png)
+![Access Control Hierarchy](../.gitbook/assets/access-control.png)
 
 ### Role Definitions
 
 **Owner** (`onlyOwner` modifier)
-- The deployer or designated admin address
-- Has full control over contract configuration
-- Is the only address authorized to call `_authorizeUpgrade` for UUPS upgrades
-- Can set the manager address, fee recipient, default fee rate, and referral codes
-- Can call `recoverToken()` for emergency recovery of accidentally sent tokens (but cannot drain the vault's own WETH or USDC)
+
+* The deployer or designated admin address
+* Has full control over contract configuration
+* Is the only address authorized to call `_authorizeUpgrade` for UUPS upgrades
+* Can set the manager address, fee recipient, default fee rate, and referral codes
+* Can call `recoverToken()` for emergency recovery of accidentally sent tokens (but cannot drain the vault's own WETH or USDC)
 
 **Manager** (`onlyManager` modifier)
-- An operational address (typically the keeper bot)
-- Set by the owner via `setManager(address)`
-- Can trigger `harvest()` to collect and distribute trading fees
-- Can trigger `rebalance()` to reposition liquidity into new tick ranges
-- Cannot modify contract configuration or access user funds directly
+
+* An operational address (typically the keeper bot)
+* Set by the owner via `setManager(address)`
+* Can trigger `harvest()` to collect and distribute trading fees
+* Can trigger `rebalance()` to reposition liquidity into new tick ranges
+* Cannot modify contract configuration or access user funds directly
 
 **User** (no special modifier beyond standard checks)
-- Any address that calls `deposit()` with USDC
-- Receives non-transferable ERC20 share tokens representing their proportion of the vault
-- Can call `withdraw()` after their lock period expires
-- Can claim any pending reward distributions
 
----
+* Any address that calls `deposit()` with USDC
+* Receives non-transferable ERC20 share tokens representing their proportion of the vault
+* Can call `withdraw()` after their lock period expires
+* Can claim any pending reward distributions
+
+***
 
 ## Related Pages
 
-- [Architecture Overview](../architecture/overview.md) -- System-level architecture and data flows
-- [Vault Mechanics](vault-mechanics.md) -- Detailed deposit, withdraw, and rebalance logic
-- [Fee Structure](fee-structure.md) -- Lock periods, fee calculation, and referrals
-- [Security](security.md) -- Reentrancy, TWAP, slippage, and emergency recovery
+* [Architecture Overview](../architecture/overview.md) -- System-level architecture and data flows
+* [Vault Mechanics](vault-mechanics.md) -- Detailed deposit, withdraw, and rebalance logic
+* [Fee Structure](fee-structure.md) -- Lock periods, fee calculation, and referrals
+* [Security](security.md) -- Reentrancy, TWAP, slippage, and emergency recovery

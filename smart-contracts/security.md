@@ -2,15 +2,15 @@
 
 This page details the security mechanisms built into the UmAI vault smart contracts, covering reentrancy protection, price oracle validation, slippage controls, access restrictions, and emergency recovery.
 
----
+***
 
 ## Security Model Overview
 
 The UmAI vault handles user funds in a non-custodial manner through Uniswap V3 LP positions. Security is enforced at multiple layers:
 
-![Security Model Layers](../images/security-layers.png)
+![Security Model Layers](../.gitbook/assets/security-layers.png)
 
----
+***
 
 ## Reentrancy Protection
 
@@ -18,12 +18,12 @@ All state-changing external functions in the vault use OpenZeppelin's `Reentranc
 
 ### Protected Functions
 
-| Function | Modifier |
-|---|---|
-| `deposit()` | `nonReentrant` |
-| `withdraw()` | `nonReentrant` |
-| `harvest()` | `nonReentrant` |
-| `rebalance()` | `nonReentrant` |
+| Function                | Modifier       |
+| ----------------------- | -------------- |
+| `deposit()`             | `nonReentrant` |
+| `withdraw()`            | `nonReentrant` |
+| `harvest()`             | `nonReentrant` |
+| `rebalance()`           | `nonReentrant` |
 | `claimPendingRewards()` | `nonReentrant` |
 
 ```solidity
@@ -42,7 +42,7 @@ function deposit(
 
 The vault makes multiple external calls during a single transaction (token transfers, Uniswap swaps, LP position operations). Without reentrancy protection, an attacker could exploit the intermediate state between these calls to drain funds or manipulate share calculations.
 
----
+***
 
 ## TWAP Price Oracle Check
 
@@ -50,10 +50,10 @@ The vault validates the pool's current spot price against a Time-Weighted Averag
 
 ### Parameters
 
-| Parameter | Value | Purpose |
-|---|---|---|
-| TWAP Window | 30 minutes (1800 seconds) | Time period for averaging |
-| Max Deviation | 2% | Maximum allowed difference between spot and TWAP |
+| Parameter     | Value                     | Purpose                                          |
+| ------------- | ------------------------- | ------------------------------------------------ |
+| TWAP Window   | 30 minutes (1800 seconds) | Time period for averaging                        |
+| Max Deviation | 2%                        | Maximum allowed difference between spot and TWAP |
 
 ### Implementation
 
@@ -85,17 +85,17 @@ function _validateTWAP() internal view {
 
 ### Attack Scenarios Prevented
 
-| Attack | How TWAP Prevents It |
-|---|---|
-| **Flash loan price manipulation** | Flash loans execute within a single block. The 30-minute TWAP is unaffected by single-block price spikes. |
-| **Sandwich attacks on rebalances** | An attacker who moves the price before a rebalance would cause the TWAP check to fail, blocking the transaction. |
-| **Oracle manipulation** | The TWAP is derived directly from the Uniswap V3 pool's built-in accumulator, which requires sustained capital to manipulate over 30 minutes. |
+| Attack                             | How TWAP Prevents It                                                                                                                          |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Flash loan price manipulation**  | Flash loans execute within a single block. The 30-minute TWAP is unaffected by single-block price spikes.                                     |
+| **Sandwich attacks on rebalances** | An attacker who moves the price before a rebalance would cause the TWAP check to fail, blocking the transaction.                              |
+| **Oracle manipulation**            | The TWAP is derived directly from the Uniswap V3 pool's built-in accumulator, which requires sustained capital to manipulate over 30 minutes. |
 
 ### When TWAP Is Checked
 
 TWAP validation is performed at the beginning of every `rebalance()` call, before any liquidity is removed or re-added. If the check fails, the entire transaction reverts with no state changes.
 
----
+***
 
 ## Slippage Protection
 
@@ -131,7 +131,7 @@ ISwapRouter.ExactInputSingleParams({
 })
 ```
 
----
+***
 
 ## Non-Transferable Shares
 
@@ -157,13 +157,13 @@ function _update(
 
 ### Why Non-Transferable?
 
-| Risk | Mitigation |
-|---|---|
-| **Lock period bypass** | Without transfer restrictions, a user could sell their locked shares on a secondary market, effectively exiting early. |
-| **Fee rate arbitrage** | Shares tied to different fee rates (from referral codes or lock periods) could be mixed, breaking the per-depositor fee model. |
-| **Accounting complexity** | Non-transferability ensures the depositor list remains accurate and fee calculations remain consistent. |
+| Risk                      | Mitigation                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Lock period bypass**    | Without transfer restrictions, a user could sell their locked shares on a secondary market, effectively exiting early.         |
+| **Fee rate arbitrage**    | Shares tied to different fee rates (from referral codes or lock periods) could be mixed, breaking the per-depositor fee model. |
+| **Accounting complexity** | Non-transferability ensures the depositor list remains accurate and fee calculations remain consistent.                        |
 
----
+***
 
 ## Emergency Token Recovery
 
@@ -187,11 +187,11 @@ function recoverToken(
 
 ### Safety Constraints
 
-- **Cannot drain vault tokens:** The function explicitly blocks recovery of WETH and USDC, which are the vault's operational tokens. This prevents the owner from draining user funds.
-- **Owner-only:** Only the contract owner can call this function.
-- **Event emission:** All recovery operations emit an event for transparency and auditability.
+* **Cannot drain vault tokens:** The function explicitly blocks recovery of WETH and USDC, which are the vault's operational tokens. This prevents the owner from draining user funds.
+* **Owner-only:** Only the contract owner can call this function.
+* **Event emission:** All recovery operations emit an event for transparency and auditability.
 
----
+***
 
 ## Access Control
 
@@ -199,21 +199,21 @@ The vault enforces strict role-based access control across all sensitive operati
 
 ### Role Matrix
 
-| Operation | Owner | Manager | User | Anyone |
-|---|:---:|:---:|:---:|:---:|
-| `deposit()` | | | Yes | |
-| `withdraw()` | | | Yes | |
-| `claimPendingRewards()` | | | Yes | |
-| `harvest()` | | Yes | | |
-| `rebalance()` | | Yes | | |
-| `setManager()` | Yes | | | |
-| `setFeeRecipient()` | Yes | | | |
-| `setDefaultFeeRate()` | Yes | | | |
-| `setReferralCode()` | Yes | | | |
-| `recoverToken()` | Yes | | | |
-| `upgradeTo()` | Yes | | | |
-| `needsRebalance()` | | | | Yes (view) |
-| `balanceOf()` | | | | Yes (view) |
+| Operation               | Owner | Manager | User |   Anyone   |
+| ----------------------- | :---: | :-----: | :--: | :--------: |
+| `deposit()`             |       |         |  Yes |            |
+| `withdraw()`            |       |         |  Yes |            |
+| `claimPendingRewards()` |       |         |  Yes |            |
+| `harvest()`             |       |   Yes   |      |            |
+| `rebalance()`           |       |   Yes   |      |            |
+| `setManager()`          |  Yes  |         |      |            |
+| `setFeeRecipient()`     |  Yes  |         |      |            |
+| `setDefaultFeeRate()`   |  Yes  |         |      |            |
+| `setReferralCode()`     |  Yes  |         |      |            |
+| `recoverToken()`        |  Yes  |         |      |            |
+| `upgradeTo()`           |  Yes  |         |      |            |
+| `needsRebalance()`      |       |         |      | Yes (view) |
+| `balanceOf()`           |       |         |      | Yes (view) |
 
 ### Modifier Implementations
 
@@ -235,10 +235,10 @@ modifier onlyManager() {
 
 The Owner and Manager roles are intentionally separate:
 
-- **Owner** controls configuration and cannot trigger operational functions like rebalance (unless also set as manager). This is typically a multisig or governance contract.
-- **Manager** can only trigger operational functions and cannot modify contract parameters. This is typically the keeper bot's hot wallet, which has a smaller attack surface if compromised.
+* **Owner** controls configuration and cannot trigger operational functions like rebalance (unless also set as manager). This is typically a multisig or governance contract.
+* **Manager** can only trigger operational functions and cannot modify contract parameters. This is typically the keeper bot's hot wallet, which has a smaller attack surface if compromised.
 
----
+***
 
 ## SafeERC20 Usage
 
@@ -255,11 +255,12 @@ IERC20(usdc).safeTransfer(recipient, amount);   // Safe: reverts on failure
 ```
 
 This protects against tokens that:
-- Return `false` instead of reverting on failure
-- Do not return a value at all (non-standard ERC20)
-- Have non-standard `approve` behavior
 
----
+* Return `false` instead of reverting on failure
+* Do not return a value at all (non-standard ERC20)
+* Have non-standard `approve` behavior
+
+***
 
 ## UUPS Upgrade Authorization
 
@@ -276,12 +277,12 @@ function _authorizeUpgrade(
 
 ### Upgrade Safety Measures
 
-| Measure | Description |
-|---|---|
-| `onlyOwner` restriction | Only the contract owner can initiate an upgrade |
-| `initializer` modifier | The `initialize()` function can only be called once, preventing re-initialization attacks on the implementation contract |
-| Storage layout preservation | Upgradeable contracts use OpenZeppelin's storage gap pattern to prevent storage collisions between versions |
-| Implementation validation | The UUPS pattern requires the new implementation to also be UUPS-compatible, preventing accidental bricking |
+| Measure                     | Description                                                                                                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `onlyOwner` restriction     | Only the contract owner can initiate an upgrade                                                                          |
+| `initializer` modifier      | The `initialize()` function can only be called once, preventing re-initialization attacks on the implementation contract |
+| Storage layout preservation | Upgradeable contracts use OpenZeppelin's storage gap pattern to prevent storage collisions between versions              |
+| Implementation validation   | The UUPS pattern requires the new implementation to also be UUPS-compatible, preventing accidental bricking              |
 
 ### Re-Initialization Protection
 
@@ -312,7 +313,7 @@ function initialize(
 
 If an attacker attempted to call `initialize()` again (e.g., on the implementation contract directly), the `initializer` modifier would revert the transaction.
 
----
+***
 
 ## Rebalance Cooldown
 
@@ -334,29 +335,29 @@ function rebalance(...) external onlyManager nonReentrant {
 
 This prevents scenarios where a compromised manager key could rapidly rebalance the vault, burning value through repeated swap fees.
 
----
+***
 
 ## Security Checklist Summary
 
-| Category | Mechanism | Status |
-|---|---|---|
-| Reentrancy | `nonReentrant` on all state-changing functions | Implemented |
-| Price manipulation | 30-min TWAP oracle, 2% max deviation | Implemented |
-| Slippage | User-specified + 1% max cap | Implemented |
-| Transaction expiry | `deadline: block.timestamp` on all Uniswap calls | Implemented |
-| Lock bypass | Non-transferable ERC20 shares | Implemented |
-| Fund drainage | `recoverToken` blocks WETH/USDC withdrawal | Implemented |
-| Access control | Owner/Manager/User role separation | Implemented |
-| Token safety | SafeERC20 for all ERC20 operations | Implemented |
-| Upgrade safety | UUPS `onlyOwner` + `initializer` guard | Implemented |
-| Rebalance spam | Cooldown period between rebalances | Implemented |
-| Fee distribution failure | Pending rewards fallback mapping | Implemented |
+| Category                 | Mechanism                                        | Status      |
+| ------------------------ | ------------------------------------------------ | ----------- |
+| Reentrancy               | `nonReentrant` on all state-changing functions   | Implemented |
+| Price manipulation       | 30-min TWAP oracle, 2% max deviation             | Implemented |
+| Slippage                 | User-specified + 1% max cap                      | Implemented |
+| Transaction expiry       | `deadline: block.timestamp` on all Uniswap calls | Implemented |
+| Lock bypass              | Non-transferable ERC20 shares                    | Implemented |
+| Fund drainage            | `recoverToken` blocks WETH/USDC withdrawal       | Implemented |
+| Access control           | Owner/Manager/User role separation               | Implemented |
+| Token safety             | SafeERC20 for all ERC20 operations               | Implemented |
+| Upgrade safety           | UUPS `onlyOwner` + `initializer` guard           | Implemented |
+| Rebalance spam           | Cooldown period between rebalances               | Implemented |
+| Fee distribution failure | Pending rewards fallback mapping                 | Implemented |
 
----
+***
 
 ## Related Pages
 
-- [Smart Contracts Overview](overview.md) -- Contract versions and access control summary
-- [Vault Mechanics](vault-mechanics.md) -- Deposit, withdraw, and rebalance flows
-- [Fee Structure](fee-structure.md) -- Fee distribution and referral system
-- [Architecture Overview](../architecture/overview.md) -- System-level architecture
+* [Smart Contracts Overview](overview.md) -- Contract versions and access control summary
+* [Vault Mechanics](vault-mechanics.md) -- Deposit, withdraw, and rebalance flows
+* [Fee Structure](fee-structure.md) -- Fee distribution and referral system
+* [Architecture Overview](../architecture/overview.md) -- System-level architecture

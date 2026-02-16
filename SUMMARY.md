@@ -34,4 +34,4 @@
 
 ## Resources
 
-* [FAQ](faq.md)
+* [FAQ](resources/faq.md)

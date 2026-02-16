@@ -2,7 +2,7 @@
 
 UmAI offers a referral system that benefits both the person sharing their referral code and the person using it. This page explains how it works, how to apply a code, and what benefits you get.
 
----
+***
 
 ## How the Referral System Works
 
@@ -16,7 +16,7 @@ The referral program is built around **performance fee discounts**. Here is the 
 
 Both parties benefit -- the referred user gets a better deal on fees, and the referrer earns passive income from the users they bring in.
 
----
+***
 
 ## Applying a Referral Code
 
@@ -24,16 +24,15 @@ Referral codes are applied through a **URL parameter**. There is no separate inp
 
 ### How to Apply
 
-1. Receive a referral link from someone. It will look like this:
-   ```
-   https://app.umai.finance/?ref=CODE
-   ```
-   where `CODE` is the unique referral code.
+1.  Receive a referral link from someone. It will look like this:
 
+    ```
+    https://app.umai.finance/?ref=CODE
+    ```
+
+    where `CODE` is the unique referral code.
 2. Open the link in your browser.
-
 3. Connect your wallet.
-
 4. The referral code is automatically applied to your account.
 
 That is it. No extra steps needed.
@@ -46,7 +45,7 @@ That is it. No extra steps needed.
 
 > **No self-referral.** You cannot use your own referral code.
 
----
+***
 
 ## How Referral Affects Fee Rates
 
@@ -54,13 +53,13 @@ Without a referral code, the **default performance fee rate is 35%** of earned t
 
 When a valid referral code is applied, the fee structure is adjusted:
 
-- The referred user may receive a reduced performance fee rate.
-- The exact discount depends on the specific referral arrangement.
-- The referral code holder receives a share of the performance fees collected from the referred user's deposits.
+* The referred user may receive a reduced performance fee rate.
+* The exact discount depends on the specific referral arrangement.
+* The referral code holder receives a share of the performance fees collected from the referred user's deposits.
 
-> **Note:** When a referral code is applied, its fee rate **overrides** the lock-period-based fee rate entirely. The lock period still determines when you can withdraw, but the referral code controls your performance fee rate. See [Lock Periods](./lock-periods.md) for details on lock durations.
+> **Note:** When a referral code is applied, its fee rate **overrides** the lock-period-based fee rate entirely. The lock period still determines when you can withdraw, but the referral code controls your performance fee rate. See [Lock Periods](lock-periods.md) for details on lock durations.
 
----
+***
 
 ## Benefits for Referral Code Holders
 
@@ -68,41 +67,41 @@ If you hold a referral code and share it with others, you earn a portion of the 
 
 Key points:
 
-- Earnings are proportional to the performance fees collected from your referred users.
-- The more your referrals deposit and the longer they stay, the more you earn.
-- Referral earnings are tracked on-chain and can be claimed through the platform.
+* Earnings are proportional to the performance fees collected from your referred users.
+* The more your referrals deposit and the longer they stay, the more you earn.
+* Referral earnings are tracked on-chain and can be claimed through the platform.
 
----
+***
 
 ## Default Fee Rate (No Referral)
 
 If you deposit without applying any referral code:
 
-- Your default performance fee rate is **35%** of earned trading fees.
-- This rate is then modified based on your chosen [lock period](./lock-periods.md).
-- No referral benefits are applied.
+* Your default performance fee rate is **35%** of earned trading fees.
+* This rate is then modified based on your chosen [lock period](lock-periods.md).
+* No referral benefits are applied.
 
 > **Tip:** If someone you know uses UmAI, ask them for their referral code before you make your first deposit. It costs nothing and can reduce your fees.
 
----
+***
 
 ## Summary
 
-| Scenario | Performance Fee |
-|---|---|
-| No referral code (default) | 35% |
-| With referral code | Reduced rate (varies) |
+| Scenario                   | Performance Fee       |
+| -------------------------- | --------------------- |
+| No referral code (default) | 35%                   |
+| With referral code         | Reduced rate (varies) |
 
-| Participant | Benefit |
-|---|---|
-| Referred user | Lower performance fees |
+| Participant          | Benefit                                   |
+| -------------------- | ----------------------------------------- |
+| Referred user        | Lower performance fees                    |
 | Referral code holder | Share of referred user's performance fees |
 
----
+***
 
 ## Related Guides
 
-- [Getting Started](./getting-started.md)
-- [How to Deposit and Withdraw](./deposit-withdraw.md)
-- [Understanding Lock Periods](./lock-periods.md)
-- [FAQ](../faq.md)
+* [Getting Started](getting-started.md)
+* [How to Deposit and Withdraw](deposit-withdraw.md)
+* [Understanding Lock Periods](lock-periods.md)
+* [FAQ](../resources/faq.md)

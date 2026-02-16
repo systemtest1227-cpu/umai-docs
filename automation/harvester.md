@@ -2,7 +2,7 @@
 
 The Harvester module automatically collects accumulated trading fees from the vault's Uniswap V3 liquidity position, splits them according to the protocol's fee structure, and reinvests the remainder back into the position for compounding returns.
 
----
+***
 
 ## What Harvesting Does
 
@@ -10,9 +10,9 @@ When the UmAI Vault provides concentrated liquidity on Uniswap V3, it earns trad
 
 ### The Harvest Cycle
 
-![Harvest Cycle](../images/harvest-cycle.png)
+![Harvest Cycle](../.gitbook/assets/harvest-cycle.png)
 
----
+***
 
 ## Default Schedule
 
@@ -27,16 +27,16 @@ HARVEST_CRON="0 0 * * *"
 
 You can adjust the harvest frequency using standard cron syntax:
 
-| Schedule | Cron Expression | Use Case |
-|----------|----------------|----------|
-| Midnight UTC (default) | `0 0 * * *` | Standard operation |
-| Every 12 hours | `0 */12 * * *` | Higher fee volume |
-| Every 6 hours | `0 */6 * * *` | Very active pools |
-| Once per week (Sunday) | `0 0 * * 0` | Low fee volume |
+| Schedule               | Cron Expression | Use Case           |
+| ---------------------- | --------------- | ------------------ |
+| Midnight UTC (default) | `0 0 * * *`     | Standard operation |
+| Every 12 hours         | `0 */12 * * *`  | Higher fee volume  |
+| Every 6 hours          | `0 */6 * * *`   | Very active pools  |
+| Once per week (Sunday) | `0 0 * * 0`     | Low fee volume     |
 
 > **Note:** Harvesting more frequently increases gas costs but compounds returns faster. For most pools, daily harvesting provides a good balance.
 
----
+***
 
 ## Detailed Flow
 
@@ -44,7 +44,7 @@ You can adjust the harvest frequency using standard cron syntax:
 
 Before initiating the harvest, the bot checks the operator wallet's ETH balance on Base.
 
-![Pre-flight Gas Check](../images/gas-check.png)
+![Pre-flight Gas Check](../.gitbook/assets/gas-check.png)
 
 If the balance is below the `GAS_THRESHOLD` (default: 0.01 ETH), the harvest is skipped entirely and a warning notification is sent to Discord.
 
@@ -66,13 +66,13 @@ function harvestAndAllocate() external onlyManager;
 
 The fee split happens on-chain within the `harvestAndAllocate()` function:
 
-![Fee Distribution Split](../images/fee-distribution.png)
+![Fee Distribution Split](../.gitbook/assets/fee-distribution.png)
 
 ### Step 4: Send Alert
 
 After the transaction confirms (or fails), the bot sends a Discord notification with details.
 
----
+***
 
 ## Fee Split: Auto-Compounding
 
@@ -82,39 +82,39 @@ The UmAI Vault implements **auto-compounding** by default. After the performance
 
 Suppose the vault collects 0.1 ETH and 200 USDC in daily fees, with a 10% performance fee:
 
-| Component | WETH | USDC |
-|-----------|------|------|
-| Total Collected | 0.1 | 200 |
-| Performance Fee (10%) | 0.01 | 20 |
-| Reinvested (90%) | 0.09 | 180 |
+| Component             | WETH | USDC |
+| --------------------- | ---- | ---- |
+| Total Collected       | 0.1  | 200  |
+| Performance Fee (10%) | 0.01 | 20   |
+| Reinvested (90%)      | 0.09 | 180  |
 
 The 0.09 WETH and 180 USDC are added back to the liquidity position, increasing the vault's total value and future fee earnings.
 
----
+***
 
 ## Error Handling and Retry Logic
 
 If the harvest transaction fails, the bot retries with exponential backoff:
 
-| Attempt | Action | Delay Before Next |
-|---------|--------|-------------------|
-| 1 | Initial attempt | -- |
-| 2 | 1st retry | 2 seconds |
-| 3 | 2nd retry | 4 seconds |
-| 4 | 3rd retry | 8 seconds |
+| Attempt | Action          | Delay Before Next |
+| ------- | --------------- | ----------------- |
+| 1       | Initial attempt | --                |
+| 2       | 1st retry       | 2 seconds         |
+| 3       | 2nd retry       | 4 seconds         |
+| 4       | 3rd retry       | 8 seconds         |
 
 After all retries are exhausted, the failure is recorded by the circuit breaker. If the Harvester accumulates **5 consecutive failures**, the circuit breaker trips and the module is paused.
 
 ### Common Failure Reasons
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| Insufficient gas | Operator wallet ETH depleted | Top up the operator wallet on Base |
-| Transaction reverted | No fees to collect, or contract paused | Check vault status; fees may already be harvested |
-| RPC timeout | Network congestion or RPC provider issue | Retry will handle transient issues; check RPC provider if persistent |
-| Nonce too low | Concurrent transaction conflict | Bot auto-recovers on next attempt |
+| Error                | Cause                                    | Resolution                                                           |
+| -------------------- | ---------------------------------------- | -------------------------------------------------------------------- |
+| Insufficient gas     | Operator wallet ETH depleted             | Top up the operator wallet on Base                                   |
+| Transaction reverted | No fees to collect, or contract paused   | Check vault status; fees may already be harvested                    |
+| RPC timeout          | Network congestion or RPC provider issue | Retry will handle transient issues; check RPC provider if persistent |
+| Nonce too low        | Concurrent transaction conflict          | Bot auto-recovers on next attempt                                    |
 
----
+***
 
 ## Discord Notifications
 
@@ -151,19 +151,19 @@ Threshold: 0.01 ETH
 Action: Harvest skipped — please top up the operator wallet
 ```
 
----
+***
 
 ## Configuration
 
 All Harvester settings are controlled via environment variables:
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `HARVEST_CRON` | No | `0 0 * * *` | Cron schedule for harvesting |
-| `GAS_THRESHOLD` | No | `0.01` | Minimum ETH balance to proceed (in ETH) |
-| `MAX_RETRIES` | No | `3` | Number of retry attempts |
-| `RETRY_BASE_DELAY` | No | `2000` | Base delay between retries (ms) |
-| `DISCORD_WEBHOOK_URL` | No | -- | Webhook URL for notifications |
+| Variable              | Required | Default     | Description                             |
+| --------------------- | -------- | ----------- | --------------------------------------- |
+| `HARVEST_CRON`        | No       | `0 0 * * *` | Cron schedule for harvesting            |
+| `GAS_THRESHOLD`       | No       | `0.01`      | Minimum ETH balance to proceed (in ETH) |
+| `MAX_RETRIES`         | No       | `3`         | Number of retry attempts                |
+| `RETRY_BASE_DELAY`    | No       | `2000`      | Base delay between retries (ms)         |
+| `DISCORD_WEBHOOK_URL` | No       | --          | Webhook URL for notifications           |
 
 ### Example `.env` Configuration
 
@@ -181,7 +181,7 @@ MAX_RETRIES=5
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 ```
 
----
+***
 
 ## Manual Harvest
 

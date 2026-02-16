@@ -2,25 +2,25 @@
 
 The UmAI automation bot is a Node.js service that performs ongoing vault maintenance without human intervention. It harvests trading fees, rebalances liquidity positions, distributes referral rewards, and sends real-time alerts to Discord.
 
----
+***
 
 ## Architecture
 
 The bot runs as an **Express.js HTTP server** on **port 3001**. It exposes health-check and management API endpoints while running background cron jobs for each automated task.
 
-![Bot Architecture](../images/bot-architecture.png)
+![Bot Architecture](../.gitbook/assets/bot-architecture.png)
 
 ### Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| Runtime | Node.js |
-| HTTP Framework | Express.js |
-| Blockchain | ethers.js (v6) |
-| Scheduling | node-cron |
-| Alerts | Discord Webhooks |
+| Component      | Technology       |
+| -------------- | ---------------- |
+| Runtime        | Node.js          |
+| HTTP Framework | Express.js       |
+| Blockchain     | ethers.js (v6)   |
+| Scheduling     | node-cron        |
+| Alerts         | Discord Webhooks |
 
----
+***
 
 ## Modules
 
@@ -48,24 +48,24 @@ Manages referral codes, tracks user-to-code mappings, and calculates reward dist
 
 Sends structured notifications to a Discord channel via webhook. All other modules call the Alerter to report successes, failures, and warnings.
 
----
+***
 
 ## Cron Scheduling
 
 Each automated task is registered as a cron job using `node-cron`. Schedules are configured through environment variables so operators can tune timing without code changes.
 
-| Job | Default Schedule | Env Variable |
-|-----|-----------------|--------------|
-| Harvest | `0 0 * * *` (midnight UTC) | `HARVEST_CRON` |
-| Rebalance Check | `*/5 * * * *` (every 5 min) | `REBALANCE_CRON` |
-| Referral Distribution | Manual / on-demand | `DISTRIBUTE_CRON` |
+| Job                   | Default Schedule            | Env Variable      |
+| --------------------- | --------------------------- | ----------------- |
+| Harvest               | `0 0 * * *` (midnight UTC)  | `HARVEST_CRON`    |
+| Rebalance Check       | `*/5 * * * *` (every 5 min) | `REBALANCE_CRON`  |
+| Referral Distribution | Manual / on-demand          | `DISTRIBUTE_CRON` |
 
 ```bash
 # Example: run harvest at 2:00 AM UTC instead of midnight
 HARVEST_CRON="0 2 * * *"
 ```
 
----
+***
 
 ## Circuit Breaker Pattern
 
@@ -80,53 +80,53 @@ To prevent runaway failures from draining gas or spamming the network, the bot i
 5. The circuit resets automatically after a configurable cooldown period, or an operator can manually reset it via the API.
 6. Any successful execution immediately resets the failure counter to 0.
 
-![Circuit Breaker State Machine](../images/circuit-breaker.png)
+![Circuit Breaker State Machine](../.gitbook/assets/circuit-breaker.png)
 
 ### Configuration
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `CIRCUIT_BREAKER_THRESHOLD` | `5` | Failures before tripping |
-| `CIRCUIT_BREAKER_COOLDOWN` | `3600` | Seconds before auto-reset |
+| Parameter                   | Default | Description               |
+| --------------------------- | ------- | ------------------------- |
+| `CIRCUIT_BREAKER_THRESHOLD` | `5`     | Failures before tripping  |
+| `CIRCUIT_BREAKER_COOLDOWN`  | `3600`  | Seconds before auto-reset |
 
----
+***
 
 ## Retry Logic with Exponential Backoff
 
 Before a failure is counted against the circuit breaker, each operation is retried with exponential backoff:
 
-| Attempt | Delay |
-|---------|-------|
+| Attempt   | Delay     |
+| --------- | --------- |
 | 1st retry | 2 seconds |
 | 2nd retry | 4 seconds |
 | 3rd retry | 8 seconds |
 
 After 3 retries (4 total attempts), the operation is marked as failed and the circuit breaker counter increments.
 
-![Retry Logic with Exponential Backoff](../images/retry-logic.png)
+![Retry Logic with Exponential Backoff](../.gitbook/assets/retry-logic.png)
 
 The maximum retry count and base delay are configurable:
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `MAX_RETRIES` | `3` | Number of retries after initial attempt |
-| `RETRY_BASE_DELAY` | `2000` | Base delay in milliseconds |
+| Parameter          | Default | Description                             |
+| ------------------ | ------- | --------------------------------------- |
+| `MAX_RETRIES`      | `3`     | Number of retries after initial attempt |
+| `RETRY_BASE_DELAY` | `2000`  | Base delay in milliseconds              |
 
----
+***
 
 ## Gas Balance Monitoring
 
 Before executing any on-chain transaction, the bot checks the operator wallet's ETH balance on Base. If the balance falls below the configured threshold, the transaction is skipped and a warning is sent to Discord.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `GAS_THRESHOLD` | `0.01` | Minimum ETH balance required (in ETH) |
+| Parameter       | Default | Description                           |
+| --------------- | ------- | ------------------------------------- |
+| `GAS_THRESHOLD` | `0.01`  | Minimum ETH balance required (in ETH) |
 
-![Gas Balance Monitoring](../images/gas-monitoring.png)
+![Gas Balance Monitoring](../.gitbook/assets/gas-monitoring.png)
 
 The gas monitor runs before every harvest, rebalance, and distribution operation. This prevents transactions from failing mid-execution due to insufficient gas, which would waste the gas spent on the failed transaction.
 
----
+***
 
 ## Discord Webhook Notifications
 
@@ -134,13 +134,13 @@ The bot sends real-time notifications to a Discord channel for all significant e
 
 ### Event Types
 
-| Event | Color | Example |
-|-------|-------|---------|
-| Harvest Success | Green | "Harvested 0.05 ETH + 120 USDC in fees" |
-| Rebalance Success | Blue | "Rebalanced to tick range [-204360, -200360]" |
-| Operation Failed | Red | "Harvest failed: insufficient gas" |
-| Low Gas Warning | Yellow | "Operator balance below 0.01 ETH" |
-| Circuit Breaker Tripped | Red | "Harvester paused after 5 failures" |
+| Event                   | Color  | Example                                        |
+| ----------------------- | ------ | ---------------------------------------------- |
+| Harvest Success         | Green  | "Harvested 0.05 ETH + 120 USDC in fees"        |
+| Rebalance Success       | Blue   | "Rebalanced to tick range \[-204360, -200360]" |
+| Operation Failed        | Red    | "Harvest failed: insufficient gas"             |
+| Low Gas Warning         | Yellow | "Operator balance below 0.01 ETH"              |
+| Circuit Breaker Tripped | Red    | "Harvester paused after 5 failures"            |
 
 ### Configuration
 
@@ -156,22 +156,22 @@ To set up a Discord webhook:
 3. Click **New Webhook** and configure the channel.
 4. Copy the webhook URL and set it as the `DISCORD_WEBHOOK_URL` environment variable.
 
----
+***
 
 ## Environment Variables Summary
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `RPC_URL` | Yes | -- | Base Mainnet RPC endpoint |
-| `PRIVATE_KEY` | Yes | -- | Operator wallet private key |
-| `VAULT_ADDRESS` | Yes | -- | UmAI Vault proxy address |
-| `BOT_PORT` | No | `3001` | HTTP server port |
-| `DISCORD_WEBHOOK_URL` | No | -- | Discord alerts webhook |
-| `HARVEST_CRON` | No | `0 0 * * *` | Harvest schedule |
-| `REBALANCE_CRON` | No | `*/5 * * * *` | Rebalance check schedule |
-| `GAS_THRESHOLD` | No | `0.01` | Min ETH for transactions |
-| `CIRCUIT_BREAKER_THRESHOLD` | No | `5` | Failures before pause |
-| `MAX_RETRIES` | No | `3` | Retry attempts per operation |
-| `API_KEY` | No | -- | Optional API authentication key |
+| Variable                    | Required | Default       | Description                     |
+| --------------------------- | -------- | ------------- | ------------------------------- |
+| `RPC_URL`                   | Yes      | --            | Base Mainnet RPC endpoint       |
+| `PRIVATE_KEY`               | Yes      | --            | Operator wallet private key     |
+| `VAULT_ADDRESS`             | Yes      | --            | UmAI Vault proxy address        |
+| `BOT_PORT`                  | No       | `3001`        | HTTP server port                |
+| `DISCORD_WEBHOOK_URL`       | No       | --            | Discord alerts webhook          |
+| `HARVEST_CRON`              | No       | `0 0 * * *`   | Harvest schedule                |
+| `REBALANCE_CRON`            | No       | `*/5 * * * *` | Rebalance check schedule        |
+| `GAS_THRESHOLD`             | No       | `0.01`        | Min ETH for transactions        |
+| `CIRCUIT_BREAKER_THRESHOLD` | No       | `5`           | Failures before pause           |
+| `MAX_RETRIES`               | No       | `3`           | Retry attempts per operation    |
+| `API_KEY`                   | No       | --            | Optional API authentication key |
 
 > **Security Note:** Never commit `PRIVATE_KEY` or `DISCORD_WEBHOOK_URL` to version control. Use environment files (`.env`) that are excluded via `.gitignore`.
