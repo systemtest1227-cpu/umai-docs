@@ -4,17 +4,17 @@
 
 ## General
 
-### What is UmAI?
+### What is UnAI?
 
-UmAI is an **AI-powered concentrated liquidity optimizer**. It uses artificial intelligence to automatically manage Uniswap V3/V4 liquidity positions on your behalf. Instead of manually setting price ranges and monitoring markets 24/7, you simply deposit USDC and let UmAI's AI engine handle everything -- optimizing ranges, rebalancing positions, and maximizing your trading fee yield.
+UnAI is an **AI-powered concentrated liquidity optimizer**. It uses artificial intelligence to automatically manage Uniswap V3/V4 liquidity positions on your behalf. Instead of manually setting price ranges and monitoring markets 24/7, you simply deposit USDC and let UnAI's AI engine handle everything -- optimizing ranges, rebalancing positions, and maximizing your trading fee yield.
 
-### What chain is UmAI on?
+### What chain is UnAI on?
 
-UmAI is currently live on **Base**, an Ethereum Layer 2 network. Multi-chain expansion to Ethereum mainnet, Arbitrum, Polygon, and other networks is planned for the future.
+UnAI is currently live on **Base**, an Ethereum Layer 2 network. Multi-chain expansion to Ethereum mainnet, Arbitrum, Polygon, and other networks is planned for the future.
 
-### Who is behind UmAI?
+### Who is behind UnAI?
 
-UmAI is a protocol with a dedicated team focused on AI-driven DeFi strategies. The smart contracts are deployed on-chain and operate transparently. A manager role handles operational tasks like rebalancing and harvesting, but your funds are always held in the non-custodial smart contract -- never by a person.
+UnAI is a protocol with a dedicated team focused on AI-driven DeFi strategies. The smart contracts are deployed on-chain and operate transparently. A manager role handles operational tasks like rebalancing and harvesting, but your funds are always held in the non-custodial smart contract -- never by a person.
 
 ---
 
@@ -26,7 +26,7 @@ UmAI is a protocol with a dedicated team focused on AI-driven DeFi strategies. T
 
 ### What is the minimum deposit?
 
-The minimum deposit is **500 USDC**. There is no maximum limit.
+The minimum deposit is **100 USDC**. There is no maximum limit.
 
 ### Can I deposit multiple times?
 
@@ -47,7 +47,7 @@ See [Getting Started](./user-guide/getting-started.md) for detailed instructions
 
 ### How does the AI work?
 
-UmAI's AI engine runs continuously and performs three core functions:
+UnAI's AI engine runs continuously and performs three core functions:
 
 1. **Price prediction** -- Analyzes market data to anticipate price movements.
 2. **Range optimization** -- Sets the optimal tick range for concentrated liquidity to capture maximum trading fees.
@@ -59,12 +59,12 @@ The result is a hands-free yield experience where your capital is always working
 
 Impermanent loss (IL) is a risk that occurs when you provide liquidity and the price of the assets in the pool changes. If one token's price moves significantly relative to the other, the value of your position can be lower than if you had simply held the tokens.
 
-**How UmAI minimizes it:**
+**How UnAI minimizes it:**
 - The AI actively monitors price movements and adjusts ranges to keep positions well-centered around the current price.
 - Dynamic rebalancing reduces exposure to large price swings.
 - Concentrated liquidity in tight, AI-optimized ranges earns more fees, which can offset IL in most market conditions.
 
-> **Note:** Impermanent loss cannot be fully eliminated. It is an inherent risk of providing liquidity. UmAI aims to minimize it and ensure that fee earnings outpace any IL experienced.
+> **Note:** Impermanent loss cannot be fully eliminated. It is an inherent risk of providing liquidity. UnAI aims to minimize it and ensure that fee earnings outpace any IL experienced.
 
 ### Who manages the vault?
 
@@ -84,7 +84,7 @@ If the market price moves outside the current liquidity range:
 - Alternatively, the vault manager can manually trigger a rebalance.
 - Once rebalanced, the position resumes earning fees.
 
-This process usually happens within minutes, thanks to UmAI's continuous monitoring.
+This process usually happens within minutes, thanks to UnAI's continuous monitoring.
 
 ---
 
@@ -103,7 +103,7 @@ The dashboard shows the current live APR so you can track performance in real ti
 
 ### How are fees calculated?
 
-UmAI charges a **performance fee** -- a percentage of the trading fees your position earns. The fee rate depends on your [lock period](./user-guide/lock-periods.md):
+UnAI charges a **performance fee** -- a percentage of the trading fees your position earns. The fee rate depends on your [lock period](./user-guide/lock-periods.md):
 
 | Lock Period | Performance Fee | You Keep |
 |---|---|---|
@@ -113,11 +113,11 @@ UmAI charges a **performance fee** -- a percentage of the trading fees your posi
 
 There are **no deposit fees, no withdrawal fees, and no management fees**. The only fee is the performance fee on earnings.
 
-If you do not use a referral code, the default performance fee rate is 35%. See [Referral Program](./user-guide/referral-program.md) for details.
+The performance fee rate is 30% for all users.
 
 ### Can I see my earnings?
 
-Yes. The UmAI dashboard shows:
+Yes. The UnAI dashboard shows:
 
 - **Pending rewards** -- The fees you have earned that are ready to claim.
 - **Earnings history chart** -- A visual chart of your yield over time, with 1-hour, 1-day, and 1-week views.
@@ -156,7 +156,7 @@ You receive **USDC** -- your original deposit plus your net share of earned fees
 
 ### Are my funds safe?
 
-UmAI is designed with security as a top priority:
+UnAI is designed with security as a top priority:
 
 - **Non-custodial smart contract** -- Your funds are held in the vault smart contract, not by any individual or team.
 - **Audited code** -- The smart contracts have been audited for security vulnerabilities.
@@ -168,7 +168,7 @@ UmAI is designed with security as a top priority:
 
 ### Has the smart contract been audited?
 
-Yes. The UmAI vault smart contract includes industry-standard protections such as ReentrancyGuard and TWAP oracle validation. Details of specific audits are available through UmAI's official channels.
+Yes. The UnAI vault smart contract includes industry-standard protections such as ReentrancyGuard and TWAP oracle validation. Details of specific audits are available through UnAI's official channels.
 
 ---
 
@@ -176,7 +176,14 @@ Yes. The UmAI vault smart contract includes industry-standard protections such a
 
 ### How do referral codes work?
 
-Referral codes are applied by visiting UmAI through a special link: `https://app.umai.finance/?ref=CODE`. Once applied, the code is permanently linked to your wallet and cannot be changed. Referred users may receive reduced performance fees, and referral code holders earn a share of fees from their referrals.
+UnAI uses an **approval-based affiliate referral model**:
+
+1. **As a referrer:** Apply for a referral code via the "Referral" button in the app. Submit your X (Twitter) ID and email for review. Once approved, you receive a unique referral code.
+2. **As a referred user:** Visit the UnAI app with a referral link: `https://un-ai.io/app?utm_id=CODE`. Connect your wallet -- the referral code is automatically linked to your account.
+3. You deposit normally and pay the standard 30% performance fee (no extra cost).
+4. The referral code holder earns a commission from the **protocol's 30% fee share** generated by your deposits.
+
+Both parties benefit -- you use UnAI as normal with no additional fees, and the referrer earns passive income from the protocol's share.
 
 See [Referral Program](./user-guide/referral-program.md) for the full breakdown.
 
@@ -190,7 +197,7 @@ Common causes and solutions:
 
 1. **Insufficient gas (ETH on Base)** -- Make sure you have a small amount of ETH on Base to pay for transaction fees.
 2. **Slippage too low** -- During high volatility, the default 0.5% slippage may not be enough. Try increasing it slightly (up to the 1% maximum enforced by the contract).
-3. **Deposit below minimum** -- Make sure you are depositing at least 500 USDC.
+3. **Deposit below minimum** -- Make sure you are depositing at least 100 USDC.
 4. **Wrong network** -- Confirm your wallet is connected to Base (Chain ID: 8453).
 
 ### I do not see my deposit on the dashboard.
@@ -210,7 +217,7 @@ Common causes and solutions:
 
 ## Still Have Questions?
 
-Join the UmAI community for help:
+Join the UnAI community for help:
 
 - **Discord** -- Chat with the team and other users
 - **Twitter / X** -- Follow for updates and announcements

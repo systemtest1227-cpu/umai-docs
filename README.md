@@ -1,8 +1,8 @@
-# UmAI
+# UnAI
 
 ## AI-Powered Concentrated Liquidity Optimization
 
-UmAI is an AI-driven protocol that automatically manages concentrated liquidity positions on Uniswap V3 (and soon V4). It eliminates the complexity of manual LP management by using intelligent algorithms to optimize price ranges, rebalance positions, and compound earned fees -- all on your behalf.
+UnAI is an AI-driven protocol that automatically manages concentrated liquidity positions on Uniswap V3. It eliminates the complexity of manual LP management by using intelligent algorithms to optimize price ranges, rebalance positions, and compound earned fees -- all on your behalf.
 
 ---
 
@@ -22,26 +22,27 @@ The result: most Uniswap V3 LPs underperform a simple buy-and-hold strategy.
 
 ## The Solution
 
-UmAI solves these problems with a fully automated vault system:
+UnAI solves these problems with a fully automated vault system:
 
-| What UmAI Does | How |
+| What UnAI Does | How |
 |---|---|
 | **Optimizes price ranges** | AI calculates optimal tick ranges based on current volatility and pool conditions |
-| **Auto-rebalances** | Monitors positions 24/7 and repositions when the price drifts outside the range, with TWAP oracle protection against manipulation |
+| **Auto-rebalances** | Monitors positions 24/7 and repositions when the price drifts outside the range, with anti-fake-breakout confirmation to avoid unnecessary rebalances |
 | **Compounds fees** | Earned trading fees are automatically reinvested into the position, maximizing APR |
 | **Handles swaps** | Accepts USDC-only deposits and automatically swaps to the optimal token ratio for the LP position |
-| **Protects against MEV** | Slippage protection, deadline checks, and TWAP validation on every operation |
+| **Distributes rewards** | Earned WETH rewards are pushed directly to your wallet daily |
 
 ### How It Works (Simplified)
 
 ```
-1. Deposit USDC into the UmAI Vault
+1. Deposit USDC into the UnAI Vault
 2. The vault swaps to the optimal WETH/USDC ratio
 3. AI calculates the best concentrated liquidity range
 4. A Uniswap V3 LP position is minted
 5. The AI monitors and rebalances as needed
 6. Earned fees are compounded automatically
-7. Withdraw anytime (after lock period) back to USDC
+7. WETH rewards are pushed to your wallet daily
+8. Withdraw anytime (after lock period) back to USDC
 ```
 
 ---
@@ -51,19 +52,22 @@ UmAI solves these problems with a fully automated vault system:
 ### USDC-Only Deposits
 No need to manage multiple tokens. Deposit USDC, and the vault handles all token swaps internally using optimal swap calculations for concentrated liquidity.
 
-### Lock Periods with Variable Fees
+### Lock Periods
 Choose your commitment level:
-- **3 months** -- 50% performance fee
-- **6 months** -- 40% performance fee
+- **3 months** -- 30% performance fee
+- **6 months** -- 30% performance fee
 - **12 months** -- 30% performance fee
 
-Longer locks reward you with lower fees on earned yield.
+All lock periods share the same 30% performance fee rate. Lock periods determine when you can withdraw your principal.
 
-### Referral System
-Referral codes can unlock custom fee rates below the default 35%. Each code is applied once at deposit time and persists for the life of the position.
+### WETH Reward Distribution
+Your share of trading fees (70%) is automatically pushed to your wallet as WETH every day. No need to manually claim -- rewards arrive directly. If a push transfer fails, rewards are stored as pending and can be claimed via `claimRewards()`.
 
-### Auto-Rebalance with TWAP Protection
-The vault continuously checks whether positions need rebalancing. When triggered, it uses a 30-minute TWAP oracle to validate the current price against manipulation, ensuring rebalances execute at fair market prices.
+### Referral Affiliate Program
+UnAI offers an approval-based referral program. Users apply for a referral code through the app, and once approved by the platform, they receive a unique code to share. Referral code holders earn a commission from the protocol's fee share when users they referred generate trading fees. This is an affiliate model -- referred users pay the same 30% performance fee as everyone else.
+
+### Auto-Rebalance with Breakout Confirmation
+The vault continuously checks whether positions need rebalancing. When the price moves out of range, the bot uses a **Breakout Confirmation** system that waits for multiple consecutive confirmations before executing, preventing unnecessary rebalances during temporary price spikes.
 
 ### Non-Transferable Shares
 Vault shares (ERC20) are non-transferable by design, preventing lock period bypass through secondary markets.
@@ -72,7 +76,7 @@ Vault shares (ERC20) are non-transferable by design, preventing lock period bypa
 
 ## Network
 
-UmAI is live on **Base Mainnet**, targeting the WETH/USDC 0.30% fee tier pool. Multi-chain expansion (Arbitrum, Polygon, Ethereum Mainnet) is on the roadmap.
+UnAI is live on **Base Mainnet**, targeting the WETH/USDC 0.30% fee tier pool.
 
 **Production Vault Address:**
 ```
@@ -89,13 +93,12 @@ UmAI is live on **Base Mainnet**, targeting the WETH/USDC 0.30% fee tier pool. M
 | [Smart Contracts Overview](smart-contracts/overview.md) | Contract versions, interfaces, and access control |
 | [Vault Mechanics](smart-contracts/vault-mechanics.md) | Deposit, withdraw, rebalance, and share token flows |
 | [Fee Structure](smart-contracts/fee-structure.md) | Lock periods, fee calculation, referrals, and distribution |
-| [Security](smart-contracts/security.md) | Reentrancy guards, TWAP checks, slippage protection, and more |
+| [Security](smart-contracts/security.md) | Reentrancy guards, slippage protection, and more |
 
 ---
 
 ## Links
 
-- **Launch App**: [app.umai.finance](https://app.umai.finance)
-- **Website**: [umai.finance](https://umai.finance)
-- **GitHub**: [github.com/UmAI-protocol](https://github.com/UmAI-protocol)
+- **Launch App**: [un-ai.io/app](https://un-ai.io/app)
+- **Website**: [un-ai.io](https://un-ai.io)
 - **Base Explorer (Vault)**: [basescan.org/address/0x331a49587A42b92fd0bC2B31cdB07BD0cfC7C8f5](https://basescan.org/address/0x331a49587A42b92fd0bC2B31cdB07BD0cfC7C8f5)

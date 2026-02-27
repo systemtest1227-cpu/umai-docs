@@ -1,12 +1,12 @@
 # Overview
 
-This page provides a high-level view of the UmAI smart contract system, including the version history, production deployment details, core interfaces, and access control model.
+This page provides a high-level view of the UnAI smart contract system, including the version history, production deployment details, core interfaces, and access control model.
 
 ***
 
 ## Contract Versions
 
-UmAI's vault contract has evolved through four versions. Each version added significant features while maintaining backward compatibility with existing depositor state.
+UnAI's vault contract has evolved through four versions. Each version added significant features while maintaining backward compatibility with existing depositor state.
 
 | Feature                           |  V1 |  V2 |  V3 | V3 Upgradeable |
 | --------------------------------- | :-: | :-: | :-: | :------------: |
@@ -22,7 +22,7 @@ UmAI's vault contract has evolved through four versions. Each version added sign
 | Deadline-based slippage           |  -- | Yes | Yes |       Yes      |
 | Referral system                   |  -- |  -- | Yes |       Yes      |
 | Auto-rebalance (`needsRebalance`) |  -- |  -- | Yes |       Yes      |
-| TWAP oracle validation            |  -- |  -- | Yes |       Yes      |
+| Breakout Confirmation validation  |  -- |  -- | Yes |       Yes      |
 | Rebalance cooldown                |  -- |  -- | Yes |       Yes      |
 | Push-based fee distribution       |  -- |  -- | Yes |       Yes      |
 | Pending rewards fallback          |  -- |  -- | Yes |       Yes      |
@@ -44,7 +44,7 @@ The current production deployment uses **MellowLiteVaultV3Upgradeable** behind a
 | **Solidity Version**  | ^0.8.20                                                                           |
 | **OpenZeppelin Base** | ERC20Upgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable |
 
-> **Note:** The internal contract names (`MellowLiteVault`, `UniLink`) are legacy development names. The public-facing brand is **UmAI**. All user documentation and interfaces should use "UmAI Vault" or "UmAI" exclusively.
+> **Note:** The internal contract names (`MellowLiteVault`, `UniLink`) are legacy development names. The public-facing brand is **UnAI**. All user documentation and interfaces should use "UnAI Vault" or "UnAI" exclusively.
 
 ### Inheritance Chain
 

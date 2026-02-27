@@ -120,34 +120,34 @@ When `AUTO_REBALANCE` is `false`, the Rebalancer still checks the position statu
 
 ***
 
-## TWAP Safety Check
+## Breakout Confirmation Safety Check
 
-Before executing a rebalance, the bot performs a **Time-Weighted Average Price (TWAP)** check to guard against price manipulation or flash loan attacks.
+Before executing a rebalance, the bot performs a **Breakout Confirmation** check to guard against price manipulation or flash loan attacks.
 
 ### How It Works
 
-1. The bot reads the pool's TWAP over a **30-minute window** using the Uniswap V3 oracle.
-2. It compares the current spot price to the 30-minute TWAP.
+1. The bot reads the pool's time-weighted average price over a **30-minute window** using the Uniswap V3 oracle.
+2. It compares the current spot price to the 30-minute time-weighted average.
 3. If the deviation exceeds **2%**, the rebalance is skipped and a warning is sent to Discord.
 
-![TWAP Safety Check](../.gitbook/assets/twap-check.png)
+![Breakout Confirmation Safety Check](../.gitbook/assets/twap-check.png)
 
 ### Configuration
 
 | Parameter            | Default | Description                                    |
 | -------------------- | ------- | ---------------------------------------------- |
-| `TWAP_WINDOW`        | `1800`  | TWAP observation window in seconds (30 min)    |
-| `TWAP_MAX_DEVIATION` | `200`   | Maximum allowed deviation in basis points (2%) |
+| `TWAP_WINDOW`        | `1800`  | Breakout Confirmation observation window in seconds (30 min) |
+| `TWAP_MAX_DEVIATION` | `200`   | Maximum allowed deviation in basis points (2%)               |
 
 ### Why This Matters
 
-An attacker could temporarily move the pool price (via a flash loan or large swap) to trigger a rebalance at an unfavorable price. The TWAP check ensures the bot only rebalances when the current price reflects genuine market conditions sustained over the observation window.
+An attacker could temporarily move the pool price (via a flash loan or large swap) to trigger a rebalance at an unfavorable price. The Breakout Confirmation check ensures the bot only rebalances when the current price reflects genuine market conditions sustained over the observation window.
 
 ***
 
 ## Manual Rebalance from Manager Dashboard
 
-Operators with the Manager role can trigger a rebalance manually through the UmAI frontend dashboard. This is useful when:
+Operators with the Manager role can trigger a rebalance manually through the UnAI frontend dashboard. This is useful when:
 
 * Auto-rebalance is disabled but the position needs repositioning.
 * The operator wants to set a custom tick range instead of the default centered range.
@@ -155,7 +155,7 @@ Operators with the Manager role can trigger a rebalance manually through the UmA
 
 ### Via the Dashboard
 
-1. Navigate to the **Manager** panel in the UmAI frontend.
+1. Navigate to the **Manager** panel in the UnAI frontend.
 2. Review the current position status (tick range, current tick, in/out of range).
 3. Click **Rebalance** to trigger an immediate rebalance with default parameters.
 
@@ -191,8 +191,8 @@ Complete list of Rebalancer configuration:
 | `REBALANCE_COOLDOWN`  | No       | `60`          | Minimum minutes between rebalances   |
 | `RANGE_WIDTH`         | No       | `4000`        | Tick range width for new positions   |
 | `AUTO_REBALANCE`      | No       | `false`       | Enable automatic rebalance execution |
-| `TWAP_WINDOW`         | No       | `1800`        | TWAP observation window (seconds)    |
-| `TWAP_MAX_DEVIATION`  | No       | `200`         | Max TWAP deviation (basis points)    |
+| `TWAP_WINDOW`         | No       | `1800`        | Breakout Confirmation observation window (seconds)    |
+| `TWAP_MAX_DEVIATION`  | No       | `200`         | Max Breakout Confirmation deviation (basis points)    |
 | `GAS_THRESHOLD`       | No       | `0.01`        | Min ETH balance to execute (in ETH)  |
 | `DISCORD_WEBHOOK_URL` | No       | --            | Webhook URL for notifications        |
 
@@ -211,10 +211,10 @@ REBALANCE_COOLDOWN=90
 # Wider range: ~±10%
 RANGE_WIDTH=8000
 
-# Stricter TWAP: 1% max deviation
+# Stricter Breakout Confirmation: 1% max deviation
 TWAP_MAX_DEVIATION=100
 
-# 1-hour TWAP window
+# 1-hour Breakout Confirmation window
 TWAP_WINDOW=3600
 ```
 
@@ -243,12 +243,12 @@ Tx: https://basescan.org/tx/0x...
 Gas Used: 0.005 ETH
 ```
 
-### Rebalance Skipped (TWAP)
+### Rebalance Skipped (Breakout Confirmation)
 
 ```
-[Rebalance Skipped — TWAP Deviation]
+[Rebalance Skipped — Breakout Confirmation Deviation]
 Spot Price: $2,450.00
-TWAP (30min): $2,500.00
+Avg Price (30min): $2,500.00
 Deviation: 2.04% (threshold: 2.00%)
 Action: Rebalance deferred until price stabilizes
 ```

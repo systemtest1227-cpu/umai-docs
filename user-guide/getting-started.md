@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to UmAI -- the AI-powered concentrated liquidity optimizer built on Base. This guide walks you through everything you need to start earning yield in just a few minutes.
+Welcome to UnAI -- the AI-powered concentrated liquidity optimizer built on Base. This guide walks you through everything you need to start earning yield in just a few minutes.
 
 ***
 
@@ -10,7 +10,7 @@ Before you begin, make sure you have the following ready:
 
 ### 1. A Compatible Wallet
 
-UmAI supports the most popular Ethereum wallets through RainbowKit:
+UnAI supports the most popular Ethereum wallets through RainbowKit:
 
 * **MetaMask** -- The most widely used browser extension wallet
 * **Coinbase Wallet** -- Available as a browser extension or mobile app
@@ -20,15 +20,15 @@ UmAI supports the most popular Ethereum wallets through RainbowKit:
 
 ### 2. USDC on the Base Network
 
-UmAI accepts **USDC only** as the deposit token. You need USDC on the **Base** network (not Ethereum mainnet, not Arbitrum -- specifically Base).
+UnAI accepts **USDC only** as the deposit token. You need USDC on the **Base** network (not Ethereum mainnet, not Arbitrum -- specifically Base).
 
-The minimum deposit is **500 USDC**.
+The minimum deposit is **100 USDC**.
 
 ***
 
 ## Connecting Your Wallet
 
-1. Go to the UmAI app.
+1. Go to the UnAI app.
 2. Click the **"Connect Wallet"** button in the top-right corner.
 3. A RainbowKit modal will appear showing your wallet options.
 4. Select your preferred wallet (MetaMask, Coinbase Wallet, or WalletConnect).
@@ -41,9 +41,9 @@ The minimum deposit is **500 USDC**.
 
 ## Switching to Base Network
 
-UmAI runs on the **Base** network. If your wallet is connected to a different network (such as Ethereum mainnet), you will need to switch.
+UnAI runs on the **Base** network. If your wallet is connected to a different network (such as Ethereum mainnet), you will need to switch.
 
-1. After connecting, UmAI will detect if you are on the wrong network.
+1. After connecting, UnAI will detect if you are on the wrong network.
 2. You will see a prompt or a **"Switch Network"** button.
 3. Click the button and approve the network switch in your wallet.
 4. Your wallet will add Base automatically if it is not already configured.
@@ -89,11 +89,11 @@ Some centralized exchanges (like Coinbase) support direct withdrawals to the Bas
 
 ## Dashboard Overview
 
-Once your wallet is connected and you are on the Base network, you will see the UmAI dashboard. Here is what each section shows:
+Once your wallet is connected and you are on the Base network, you will see the UnAI dashboard. Here is what each section shows:
 
 ### Main Stats
 
-* **Total Value Locked (TVL)** -- The total amount of assets currently deposited across the entire UmAI vault.
+* **Total Value Locked (TVL)** -- The total amount of assets currently deposited across the entire UnAI vault.
 * **Fee APR** -- The current annualized percentage rate being earned from trading fees, after the AI optimizes your liquidity ranges.
 * **Your Earnings** -- The total fees you have earned from your deposited positions.
 

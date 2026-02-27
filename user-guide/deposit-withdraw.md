@@ -1,25 +1,25 @@
 # Deposit & Withdraw
 
-This guide explains the full process for depositing USDC into UmAI, how your funds are managed behind the scenes, and how to withdraw when you are ready.
+This guide explains the full process for depositing USDC into UnAI, how your funds are managed behind the scenes, and how to withdraw when you are ready.
 
 ***
 
 ## How Deposits Work
 
-Depositing into UmAI is straightforward. You deposit USDC, choose a lock period, and the vault handles the rest.
+Depositing into UnAI is straightforward. You deposit USDC, choose a lock period, and the vault handles the rest.
 
 ### Step-by-Step Deposit Process
 
 1. **Connect your wallet** and make sure you are on the Base network. (See [Getting Started](getting-started.md) if you need help.)
 2. **Enter your USDC amount.**
-   * The minimum deposit is **500 USDC**.
+   * The minimum deposit is **100 USDC**.
    * Type or paste the amount you want to deposit.
 3. **Select a lock period.**
    * Choose from **3 months**, **6 months**, or **12 months**.
    * Longer lock periods give you a lower performance fee, meaning you keep more of your earnings.
    * See [Lock Periods](lock-periods.md) for a detailed comparison.
 4. **Approve USDC spending.**
-   * If this is your first time depositing, you will need to approve the UmAI vault smart contract to spend your USDC.
+   * If this is your first time depositing, you will need to approve the UnAI vault smart contract to spend your USDC.
    * Click "Approve" and confirm the approval transaction in your wallet.
    * This is a one-time step (unless you revoke the approval later).
 5. **Confirm the deposit transaction.**
@@ -39,10 +39,10 @@ When you deposit USDC, the vault does not simply hold it. Here is what happens:
 
 1. **Optimal swap to WETH/USDC ratio** -- A portion of your USDC is automatically swapped to WETH (Wrapped ETH) at the optimal ratio for the current concentrated liquidity range. The exact split depends on the position's tick bounds relative to the current price -- it is not necessarily a 50/50 split.
 2. **LP position created** -- The vault deploys your WETH/USDC into a concentrated liquidity position on Uniswap V3 within an AI-optimized price range.
-3. **AI monitors and rebalances** -- UmAI's AI engine continuously monitors the market price and adjusts the tick range to keep your position earning maximum fees.
+3. **AI monitors and rebalances** -- UnAI's AI engine continuously monitors the market price and adjusts the tick range to keep your position earning maximum fees.
 4. **Fees accumulate** -- As traders swap through the Uniswap pool, your position earns a share of the trading fees proportional to your liquidity.
 
-> **Note:** The auto-swap means you are exposed to both USDC and ETH price movements. If ETH drops significantly, the value of your position may decrease even though you are earning fees. This is known as impermanent loss, which UmAI's AI actively works to minimize.
+> **Note:** The auto-swap means you are exposed to both USDC and ETH price movements. If ETH drops significantly, the value of your position may decrease even though you are earning fees. This is known as impermanent loss, which UnAI's AI actively works to minimize.
 
 ***
 
@@ -98,7 +98,7 @@ When depositing or withdrawing, a small amount of slippage may occur during the 
 
 | Action        | When Available             | What You Receive                   |
 | ------------- | -------------------------- | ---------------------------------- |
-| Deposit       | Anytime (min 500 USDC)     | Vault shares                       |
+| Deposit       | Anytime (min 100 USDC)     | Vault shares                       |
 | Claim Rewards | Anytime (even during lock) | Earned fees in USDC                |
 | Withdraw      | After lock period expires  | Principal + remaining fees in USDC |
 

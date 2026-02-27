@@ -6,7 +6,7 @@ The Harvester module automatically collects accumulated trading fees from the va
 
 ## What Harvesting Does
 
-When the UmAI Vault provides concentrated liquidity on Uniswap V3, it earns trading fees proportional to its share of the active tick range. These fees accumulate in the position but are **not automatically claimed** by Uniswap. The Harvester performs this collection and allocation on a scheduled basis.
+When the UnAI Vault provides concentrated liquidity on Uniswap V3, it earns trading fees proportional to its share of the active tick range. These fees accumulate in the position but are **not automatically claimed** by Uniswap. The Harvester performs this collection and allocation on a scheduled basis.
 
 ### The Harvest Cycle
 
@@ -50,7 +50,7 @@ If the balance is below the `GAS_THRESHOLD` (default: 0.01 ETH), the harvest is 
 
 ### Step 2: Call `harvestAndAllocate()`
 
-The bot sends a transaction to the UmAI Vault contract calling the `harvestAndAllocate()` function. This is a single on-chain call that:
+The bot sends a transaction to the UnAI Vault contract calling the `harvestAndAllocate()` function. This is a single on-chain call that:
 
 1. **Collects** all accumulated WETH and USDC fees from the Uniswap V3 position via the NonfungiblePositionManager.
 2. **Calculates** the performance fee based on the configured fee rate.
@@ -76,7 +76,7 @@ After the transaction confirms (or fails), the bot sends a Discord notification 
 
 ## Fee Split: Auto-Compounding
 
-The UmAI Vault implements **auto-compounding** by default. After the performance fee is deducted, the remaining collected fees are automatically added back to the Uniswap V3 position. This increases the vault's liquidity depth, which in turn earns more fees in subsequent periods.
+The UnAI Vault implements **auto-compounding** by default. After the performance fee is deducted, the remaining collected fees are automatically added back to the Uniswap V3 position. This increases the vault's liquidity depth, which in turn earns more fees in subsequent periods.
 
 ### Example
 

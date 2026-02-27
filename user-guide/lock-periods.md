@@ -1,12 +1,12 @@
 # Lock Periods
 
-Lock periods are a core part of how UmAI works. By committing your funds for a set period, you unlock lower performance fees and keep a bigger share of the yield. This page explains exactly how lock periods work, what to expect, and how to make the best choice for your situation.
+Lock periods are a core part of how UnAI works. By committing your funds for a set period, you unlock lower performance fees and keep a bigger share of the yield. This page explains exactly how lock periods work, what to expect, and how to make the best choice for your situation.
 
 ***
 
 ## Why Lock Periods Exist
 
-UmAI uses lock periods for a practical reason: **commitment enables lower fees.**
+UnAI uses lock periods for a practical reason: **commitment enables lower fees.**
 
 When the vault knows that your funds will remain deposited for a guaranteed duration, it can plan liquidity deployment more efficiently. This leads to better position management and lower operational costs. Those savings are passed on to you in the form of reduced performance fees.
 
@@ -16,25 +16,25 @@ In short: the longer you commit, the more you earn.
 
 ## The Three Options
 
-UmAI offers three lock period durations. The only difference between them is the **performance fee rate** -- the percentage of your earned trading fees that goes to the protocol.
+UnAI offers three lock period durations. The only difference between them is the **performance fee rate** -- the percentage of your earned trading fees that goes to the protocol.
 
 ### 3-Month Lock
 
 | Detail          | Value                  |
 | --------------- | ---------------------- |
 | Lock Duration   | 3 months               |
-| Performance Fee | 50%                    |
-| You Keep        | **50%** of earned fees |
+| Performance Fee | 30%                    |
+| You Keep        | **70%** of earned fees |
 
-Best for: Users who want flexibility and are testing UmAI for the first time.
+Best for: Users who want flexibility and are testing UnAI for the first time.
 
 ### 6-Month Lock
 
 | Detail          | Value                  |
 | --------------- | ---------------------- |
 | Lock Duration   | 6 months               |
-| Performance Fee | 40%                    |
-| You Keep        | **60%** of earned fees |
+| Performance Fee | 30%                    |
+| You Keep        | **70%** of earned fees |
 
 Best for: Users with medium-term conviction who want a meaningful fee reduction.
 
@@ -50,8 +50,8 @@ Best for: Long-term believers who want maximum yield retention.
 
 > **Example:** If the vault earns $1,000 in trading fees on your deposit over your lock period:
 >
-> * **3-month lock:** You keep $500, protocol takes $500
-> * **6-month lock:** You keep $600, protocol takes $400
+> * **3-month lock:** You keep $700, protocol takes $300
+> * **6-month lock:** You keep $700, protocol takes $300
 > * **12-month lock:** You keep $700, protocol takes $300
 
 ***
@@ -136,8 +136,8 @@ You can withdraw each deposit individually once it unlocks, without affecting an
 
 |                      | 3 Months | 6 Months | 12 Months |
 | -------------------- | -------- | -------- | --------- |
-| Performance Fee      | 50%      | 40%      | 30%       |
-| You Keep             | 50%      | 60%      | 70%       |
+| Performance Fee      | 30%      | 30%      | 30%       |
+| You Keep             | 70%      | 70%      | 70%       |
 | Flexibility          | Highest  | Medium   | Lowest    |
 | Yield Retention      | Lower    | Medium   | Highest   |
 | Claim Rewards Early? | Yes      | Yes      | Yes       |

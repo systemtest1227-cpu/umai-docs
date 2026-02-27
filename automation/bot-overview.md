@@ -1,6 +1,6 @@
 # Bot Overview
 
-The UmAI automation bot is a Node.js service that performs ongoing vault maintenance without human intervention. It harvests trading fees, rebalances liquidity positions, distributes referral rewards, and sends real-time alerts to Discord.
+The UnAI automation bot is a Node.js service that performs ongoing vault maintenance without human intervention. It harvests trading fees, rebalances liquidity positions, distributes referral rewards, and sends real-time alerts to Discord.
 
 ***
 
@@ -38,11 +38,13 @@ See [Rebalancer](rebalancer.md) for full details.
 
 ### Distributor
 
-Handles the distribution of referral rewards to eligible users. Works in concert with the ReferralManager to calculate and execute payouts.
+Creates pending distribution records in the database. The operator manually sends WETH to code owners and marks distributions as completed via the admin panel.
 
 ### ReferralManager
 
 Manages referral codes, tracks user-to-code mappings, and calculates reward distributions. Exposes CRUD API endpoints for referral code administration.
+
+Key tables: `referral_codes`, `referral_users`, `referral_distributions`, `referral_applications`.
 
 ### Alerter
 
@@ -164,7 +166,7 @@ To set up a Discord webhook:
 | --------------------------- | -------- | ------------- | ------------------------------- |
 | `RPC_URL`                   | Yes      | --            | Base Mainnet RPC endpoint       |
 | `PRIVATE_KEY`               | Yes      | --            | Operator wallet private key     |
-| `VAULT_ADDRESS`             | Yes      | --            | UmAI Vault proxy address        |
+| `VAULT_ADDRESS`             | Yes      | --            | UnAI Vault proxy address        |
 | `BOT_PORT`                  | No       | `3001`        | HTTP server port                |
 | `DISCORD_WEBHOOK_URL`       | No       | --            | Discord alerts webhook          |
 | `HARVEST_CRON`              | No       | `0 0 * * *`   | Harvest schedule                |

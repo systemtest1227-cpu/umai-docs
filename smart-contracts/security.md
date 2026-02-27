@@ -1,12 +1,12 @@
 # Security
 
-This page details the security mechanisms built into the UmAI vault smart contracts, covering reentrancy protection, price oracle validation, slippage controls, access restrictions, and emergency recovery.
+This page details the security mechanisms built into the UnAI vault smart contracts, covering reentrancy protection, price oracle validation, slippage controls, access restrictions, and emergency recovery.
 
 ***
 
 ## Security Model Overview
 
-The UmAI vault handles user funds in a non-custodial manner through Uniswap V3 LP positions. Security is enforced at multiple layers:
+The UnAI vault handles user funds in a non-custodial manner through Uniswap V3 LP positions. Security is enforced at multiple layers:
 
 ![Security Model Layers](../.gitbook/assets/security-layers.png)
 
@@ -44,7 +44,7 @@ The vault makes multiple external calls during a single transaction (token trans
 
 ***
 
-## TWAP Price Oracle Check
+## Breakout Confirmation Price Check
 
 The vault validates the pool's current spot price against a Time-Weighted Average Price (TWAP) before executing rebalances. This is the primary defense against price manipulation attacks.
 
@@ -52,8 +52,8 @@ The vault validates the pool's current spot price against a Time-Weighted Averag
 
 | Parameter     | Value                     | Purpose                                          |
 | ------------- | ------------------------- | ------------------------------------------------ |
-| TWAP Window   | 30 minutes (1800 seconds) | Time period for averaging                        |
-| Max Deviation | 2%                        | Maximum allowed difference between spot and TWAP |
+| Observation Window | 30 minutes (1800 seconds) | Time period for averaging                                    |
+| Max Deviation      | 2%                        | Maximum allowed difference between spot and time-weighted avg |
 
 ### Implementation
 
@@ -85,15 +85,15 @@ function _validateTWAP() internal view {
 
 ### Attack Scenarios Prevented
 
-| Attack                             | How TWAP Prevents It                                                                                                                          |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Flash loan price manipulation**  | Flash loans execute within a single block. The 30-minute TWAP is unaffected by single-block price spikes.                                     |
-| **Sandwich attacks on rebalances** | An attacker who moves the price before a rebalance would cause the TWAP check to fail, blocking the transaction.                              |
-| **Oracle manipulation**            | The TWAP is derived directly from the Uniswap V3 pool's built-in accumulator, which requires sustained capital to manipulate over 30 minutes. |
+| Attack                             | How Breakout Confirmation Prevents It                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Flash loan price manipulation**  | Flash loans execute within a single block. The 30-minute time-weighted average is unaffected by single-block price spikes.                                         |
+| **Sandwich attacks on rebalances** | An attacker who moves the price before a rebalance would cause the Breakout Confirmation check to fail, blocking the transaction.                                  |
+| **Oracle manipulation**            | The time-weighted average is derived directly from the Uniswap V3 pool's built-in accumulator, which requires sustained capital to manipulate over 30 minutes.     |
 
-### When TWAP Is Checked
+### When Breakout Confirmation Is Checked
 
-TWAP validation is performed at the beginning of every `rebalance()` call, before any liquidity is removed or re-added. If the check fails, the entire transaction reverts with no state changes.
+Breakout Confirmation validation is performed at the beginning of every `rebalance()` call, before any liquidity is removed or re-added. If the check fails, the entire transaction reverts with no state changes.
 
 ***
 
@@ -342,7 +342,7 @@ This prevents scenarios where a compromised manager key could rapidly rebalance 
 | Category                 | Mechanism                                        | Status      |
 | ------------------------ | ------------------------------------------------ | ----------- |
 | Reentrancy               | `nonReentrant` on all state-changing functions   | Implemented |
-| Price manipulation       | 30-min TWAP oracle, 2% max deviation             | Implemented |
+| Price manipulation       | 30-min Breakout Confirmation, 2% max deviation   | Implemented |
 | Slippage                 | User-specified + 1% max cap                      | Implemented |
 | Transaction expiry       | `deadline: block.timestamp` on all Uniswap calls | Implemented |
 | Lock bypass              | Non-transferable ERC20 shares                    | Implemented |

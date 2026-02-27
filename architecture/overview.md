@@ -1,12 +1,12 @@
 # System Overview
 
-This page describes the overall system architecture of UmAI, including all major components, the contract evolution history, data flows, and the upgradeability pattern.
+This page describes the overall system architecture of UnAI, including all major components, the contract evolution history, data flows, and the upgradeability pattern.
 
 ***
 
 ## System Architecture
 
-UmAI follows a layered architecture where the user interacts with a frontend, which communicates with smart contracts deployed on Base, which in turn interact with Uniswap V3 pool contracts.
+UnAI follows a layered architecture where the user interacts with a frontend, which communicates with smart contracts deployed on Base, which in turn interact with Uniswap V3 pool contracts.
 
 ```mermaid
 graph TD
@@ -23,7 +23,7 @@ graph TD
     end
 
     subgraph Smart Contracts
-        D[UmAI Vault<br/>UUPS Proxy]
+        D[UnAI Vault<br/>UUPS Proxy]
         E[Implementation Contract<br/>MellowLiteVaultV3Upgradeable]
     end
 
@@ -49,7 +49,7 @@ graph TD
 | --------------------------- | ----------------------- | ------------------------------------------------------------------------------------------- |
 | **Web App**                 | Next.js (React)         | User-facing interface for deposits, withdrawals, and position monitoring                    |
 | **Keeper Bot**              | Express.js              | Automated off-chain service that triggers rebalances and harvests when conditions are met   |
-| **UmAI Vault (Proxy)**      | Solidity, ERC1967 Proxy | Transparent entry point for all user and keeper interactions; stores all state              |
+| **UnAI Vault (Proxy)**      | Solidity, ERC1967 Proxy | Transparent entry point for all user and keeper interactions; stores all state              |
 | **Implementation Contract** | Solidity (UUPS)         | Contains the vault logic; upgradeable without migrating state or changing the proxy address |
 | **Uniswap V3 Contracts**    | Uniswap Protocol        | NonfungiblePositionManager for LP positions, SwapRouter for token swaps, Pool for pricing   |
 
@@ -57,12 +57,12 @@ graph TD
 
 ## Contract Evolution
 
-The UmAI vault has gone through four major iterations, each adding critical functionality:
+The UnAI vault has gone through four major iterations, each adding critical functionality:
 
 ```mermaid
 graph LR
     V1[V1<br/>Basic Vault] --> V2[V2<br/>Lock Periods<br/>Non-Transferable]
-    V2 --> V3[V3<br/>Referrals<br/>Auto-Rebalance<br/>TWAP]
+    V2 --> V3[V3<br/>Referrals<br/>Auto-Rebalance<br/>Breakout Confirmation]
     V3 --> V3U[V3 Upgradeable<br/>UUPS Proxy<br/>Production]
 
     style V3U fill:#2a9d8f,color:#fff
@@ -94,7 +94,7 @@ Added automation and growth features:
 
 * **Referral system** with custom fee codes -- each referral code maps to a specific fee rate
 * **Auto-rebalance** with on-chain `needsRebalance()` check
-* **TWAP price oracle** validation (30-minute window, 2% max deviation) to prevent manipulation during rebalances
+* **Breakout Confirmation** validation (30-minute window, 2% max deviation) to prevent manipulation during rebalances
 * **Cooldown period** between rebalances to prevent excessive repositioning
 * **Push-based fee distribution** with fallback to pending rewards for failed transfers
 
@@ -112,7 +112,7 @@ The current production contract, deployed behind a UUPS proxy:
 
 ## UUPS Proxy Pattern
 
-UmAI uses the UUPS (EIP-1822) proxy pattern for upgradeability. This is the recommended pattern from OpenZeppelin for production contracts.
+UnAI uses the UUPS (EIP-1822) proxy pattern for upgradeability. This is the recommended pattern from OpenZeppelin for production contracts.
 
 ![UUPS Proxy Pattern](../.gitbook/assets/uups-proxy.png)
 
@@ -137,12 +137,12 @@ function _authorizeUpgrade(address newImplementation) internal override onlyOwne
 ```mermaid
 sequenceDiagram
     participant User
-    participant Vault as UmAI Vault
+    participant Vault as UnAI Vault
     participant Router as SwapRouter
     participant NPM as PositionManager
     participant Pool as WETH/USDC Pool
 
-    User->>Vault: deposit(usdcAmount, slippage, lockPeriod, referralCode)
+    User->>Vault: deposit(usdcAmount, slippage, minAmounts, lockPeriod, deadline)
     Vault->>Vault: Calculate optimal USDC→WETH swap amount
     Vault->>Router: exactInputSingle(USDC → WETH)
     Router->>Pool: Execute swap
@@ -156,7 +156,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant User
-    participant Vault as UmAI Vault
+    participant Vault as UnAI Vault
     participant NPM as PositionManager
     participant Router as SwapRouter
 
@@ -173,13 +173,13 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant Bot as Keeper Bot
-    participant Vault as UmAI Vault
+    participant Vault as UnAI Vault
     participant Pool as WETH/USDC Pool
     participant NPM as PositionManager
     participant Router as SwapRouter
 
     Bot->>Vault: rebalance(newTickLower, newTickUpper, minAmount0, minAmount1)
-    Vault->>Pool: Validate price via TWAP (30-min window)
+    Vault->>Pool: Validate price via Breakout Confirmation (30-min window)
     Vault->>NPM: collect() earned fees
     Vault->>Vault: Distribute fees (protocol + users)
     Vault->>NPM: decreaseLiquidity(100%)
@@ -209,4 +209,4 @@ sequenceDiagram
 
 * [Smart Contracts Overview](../smart-contracts/overview.md) -- Contract versions and interfaces
 * [Vault Mechanics](../smart-contracts/vault-mechanics.md) -- Detailed deposit, withdraw, and rebalance logic
-* [Security](../smart-contracts/security.md) -- TWAP, slippage, reentrancy, and access control
+* [Security](../smart-contracts/security.md) -- Breakout Confirmation, slippage, reentrancy, and access control

@@ -1,6 +1,6 @@
 # Vault Mechanics
 
-This page explains the core operational flows of the UmAI vault: how deposits, withdrawals, rebalances, and share tokens work at the smart contract level.
+This page explains the core operational flows of the UnAI vault: how deposits, withdrawals, rebalances, and share tokens work at the smart contract level.
 
 ---
 
@@ -10,11 +10,11 @@ Users deposit USDC into the vault, which is converted into a Uniswap V3 concentr
 
 ### Step-by-Step
 
-1. **User calls `deposit()`** with the USDC amount, maximum slippage tolerance, lock period selection, and an optional referral code.
+1. **User calls `deposit()`** with the USDC amount, maximum slippage tolerance, minimum output amounts, lock period selection, and a deadline.
 
 2. **Lock period is recorded.** The vault stores the user's chosen lock period (3, 6, or 12 months) and calculates the unlock timestamp. The fee rate associated with the lock period is also recorded.
 
-3. **Referral code is applied** (if provided and valid). The referral code overrides the default fee rate with the code's custom rate. This is a one-time operation per depositor.
+3. **Referral tracking** is handled off-chain by the bot's referral system, not by the smart contract. Users register with referral codes via the bot API before depositing.
 
 4. **Optimal swap amount is calculated.** The vault determines how much of the deposited USDC should be swapped to WETH, based on the current tick range and price. This is the most mathematically complex step (see [Optimal Swap Calculation](#optimal-swap-calculation) below).
 
@@ -31,15 +31,17 @@ Users deposit USDC into the vault, which is converted into a Uniswap V3 concentr
 function deposit(
     uint256 usdcAmount,
     uint256 maxSlippage,
+    uint256 minAmount0,
+    uint256 minAmount1,
     uint8 lockPeriod,
-    bytes32 referralCode
+    uint256 deadline
 ) external nonReentrant {
     // Transfer USDC from user
     IERC20(usdc).safeTransferFrom(msg.sender, address(this), usdcAmount);
 
     // Record lock period and fee rate
     depositors[msg.sender].lockExpiry = block.timestamp + lockDuration(lockPeriod);
-    depositors[msg.sender].feeRate = getFeeRate(lockPeriod, referralCode);
+    depositors[msg.sender].feeRate = getFeeRate(lockPeriod);
 
     // Calculate optimal swap
     uint256 swapAmount = calculateOptimalSwap(usdcAmount);
@@ -202,7 +204,7 @@ Rebalancing repositions the vault's entire liquidity into a new tick range. This
 
 1. **Manager or keeper bot calls `rebalance()`** with new tick bounds (`newTickLower`, `newTickUpper`) and minimum output amounts (`minAmount0`, `minAmount1`) for slippage protection.
 
-2. **TWAP validation** ensures the current pool price is not being manipulated. The vault reads the 30-minute TWAP from the pool's `observe()` function and compares it to the current spot price. If the deviation exceeds 2%, the rebalance reverts.
+2. **Breakout Confirmation** ensures the current pool price is not being manipulated. The vault reads the 30-minute time-weighted average from the pool's `observe()` function and compares it to the current spot price. If the deviation exceeds 2%, the rebalance reverts.
 
 3. **Cooldown check** ensures a minimum time has passed since the last rebalance.
 
@@ -224,8 +226,8 @@ function rebalance(
     uint256 minAmount0,
     uint256 minAmount1
 ) external onlyManager nonReentrant {
-    // 1. Validate TWAP
-    _validateTWAP();
+    // 1. Validate via Breakout Confirmation
+    _validateBreakoutConfirmation();
 
     // 2. Check cooldown
     require(block.timestamp >= lastRebalanceTime + rebalanceCooldown, "Cooldown");
@@ -275,9 +277,9 @@ function needsRebalance() public view returns (bool) {
 
 The keeper bot polls this function periodically. When it returns `true`, the bot calculates new optimal tick bounds off-chain and submits a `rebalance()` transaction.
 
-### TWAP Safety
+### Breakout Confirmation Safety
 
-Before executing a rebalance, the vault validates the pool price against a TWAP oracle:
+Before executing a rebalance, the vault validates the pool price against a time-weighted average oracle:
 
 ```solidity
 function _validateTWAP() internal view {
@@ -298,7 +300,7 @@ function _validateTWAP() internal view {
 }
 ```
 
-This prevents rebalances during flash loan attacks or price manipulation events. The 30-minute window and 2% maximum deviation provide a strong safety margin.
+This Breakout Confirmation prevents rebalances during flash loan attacks or price manipulation events. The 30-minute window and 2% maximum deviation provide a strong safety margin.
 
 ---
 
@@ -355,4 +357,4 @@ function _update(address from, address to, uint256 value) internal override {
 - [Architecture Overview](../architecture/overview.md) -- System-level architecture and data flows
 - [Smart Contracts Overview](overview.md) -- Contract versions and interfaces
 - [Fee Structure](fee-structure.md) -- Lock periods, fee calculation, and distribution
-- [Security](security.md) -- TWAP validation, slippage protection, and reentrancy guards
+- [Security](security.md) -- Breakout Confirmation validation, slippage protection, and reentrancy guards
